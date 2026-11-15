@@ -11,6 +11,7 @@ Please find my submission for the AI Engineer Build Challenge.
 
 **Links**
 - Prototype (open on a phone): https://finn-ruddy.vercel.app (the free API host sleeps when idle, so the first load after a quiet spell can take about a minute)
+- Android app (APK, tap to install): https://github.com/sahityaiitd-ml/finn/releases/download/android-latest/finn.apk (allow "install unknown apps" once; on iPhone, open the prototype link and use Share → Add to Home Screen)
 - Repository: https://github.com/sahityaiitd-ml/finn
 - AI build history: https://github.com/sahityaiitd-ml/finn/blob/main/docs/ai-build-history/claude-code-session.md (the Claude Code conversation, readable and redacted; attached as a file too), plus `docs/build-log.md` for the decisions
 

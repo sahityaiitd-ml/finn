@@ -1,0 +1,44 @@
+name: android
+# Builds the Android wrapper APK. On main it also publishes it at a fixed release link.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, feat/android-app]
+    paths: ["apps/android/**", ".github/workflows/android.yml"]
+permissions:
+  contents: write
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: apps/android } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 21 }
+      - name: Install Capacitor
+        run: npm install --no-audit --no-fund
+      - name: Create the Android project
+        run: npx cap add android
+      - name: Generate launcher icons
+        run: npx @capacitor/assets generate --android --assetPath assets
+      - name: Build the debug APK
+        working-directory: apps/android/android
+        run: ./gradlew assembleDebug --no-daemon
+      - name: Name the file
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk finn.apk && ls -la finn.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: finn-apk
+          path: apps/android/finn.apk
+      - name: Publish to the fixed release link
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete android-latest --yes --cleanup-tag --repo "$GITHUB_REPOSITORY" || true
+          gh release create android-latest finn.apk \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "FINN for Android" \
+            --notes "Android app (debug-signed APK) that opens the live FINN web app. Built from ${GITHUB_SHA::7}. Install steps: apps/android/README.md"
