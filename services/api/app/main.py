@@ -26,7 +26,10 @@ def health() -> dict:
 
 @app.post("/jobs/fetch-filings", dependencies=[Depends(require_job_secret)])
 def fetch_filings() -> dict:
-    return {"status": "queued", "job": "fetch-filings", "note": "implemented in M1"}
+    from app.db import get_client
+    from jobs.fetch_filings import run
+
+    return {"status": "done", "job": "fetch-filings", **run(get_client())}
 
 
 @app.post("/jobs/eod", dependencies=[Depends(require_job_secret)])

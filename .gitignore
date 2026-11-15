@@ -12,3 +12,9 @@ __pycache__/
 .DS_Store
 .vercel/
 coverage/
+
+# demo PDFs over 5 MB are not committed (rule in CLAUDE.md); they live in Supabase Storage
+data/demo/results/DABUR_2026-09.pdf
+data/demo/results/MARUTI_2026-09.pdf
+data/demo/results/TATASTEEL_2026-09.pdf
+data/demo/results/RELIANCE_2026-09.pdf
