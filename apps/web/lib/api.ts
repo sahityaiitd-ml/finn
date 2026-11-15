@@ -57,6 +57,17 @@ export type DigestItem = {
   never_collapse: boolean;
   materiality: number;
   reviewed: boolean;
+  alert?: AlertInfo;
+};
+
+export type AlertInfo = {
+  triggered: string[];
+  ratio: number;
+  vol_mult: number;
+  pct: number;
+  price_pct: number;
+  cause_label: string;
+  filings: { headline: string; url: string }[];
 };
 
 export type Digest = {
@@ -114,6 +125,38 @@ export type Job = {
   error: string | null;
 };
 
+export type Override = {
+  symbol: string;
+  name: string;
+  vol_mult: number | null;
+  price_pct: number | null;
+};
+export type Settings = {
+  portfolio_id: string;
+  window_hours: number;
+  vol_mult: number;
+  price_pct: number;
+  overrides: Override[];
+  holdings: number;
+  research: number;
+  holdings_list: { symbol: string; name: string }[];
+};
+export type DryRun = { alerts: number; with_filing: number; sessions: number };
+
+/** Browser-side call with JSON body. Returns null on any failure. */
+export async function send<T>(path: string, method: string, body?: unknown): Promise<T | null> {
+  try {
+    const r = await fetch(`${API_URL}${path}`, {
+      method,
+      headers: body ? { "content-type": "application/json" } : undefined,
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    return r.ok ? ((await r.json()) as T) : null;
+  } catch {
+    return null;
+  }
+}
+
 async function get<T>(path: string): Promise<T | null> {
   try {
     const r = await fetch(`${API_URL}${path}`, { cache: "no-store" });
@@ -125,6 +168,7 @@ async function get<T>(path: string): Promise<T | null> {
 
 export const getDigest = (window: string) => get<Digest>(`/digest?window=${window}`);
 export const getPromises = (symbol: string) => get<Promises>(`/promises/${symbol}`);
+export const getSettings = () => get<Settings>("/settings");
 export const getHealth = () => get<Health>("/health");
 export const getResults = (symbol: string) => get<ResultsView>(`/results/${symbol}/latest`);
 export const getDocPage = (sha: string, n: number, q?: string) =>

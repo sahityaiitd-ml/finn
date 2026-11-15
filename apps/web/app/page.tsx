@@ -1,12 +1,14 @@
 import { Suspense } from "react";
 import { TodayFeed } from "@/components/TodayFeed";
-import { getDigest } from "@/lib/api";
+import { getDigest, getSettings } from "@/lib/api";
 
 const KEYS = ["24h", "3d", "7d"];
 
 async function Content({ searchParams }: { searchParams: Promise<{ w?: string }> }) {
   const sp = await searchParams;
-  const w = KEYS.includes(sp.w ?? "") ? sp.w! : "24h";
+  const saved = (await getSettings())?.window_hours;
+  const fallback = saved === 168 ? "7d" : saved === 72 ? "3d" : "24h";
+  const w = KEYS.includes(sp.w ?? "") ? sp.w! : fallback;
   const d = await getDigest(w);
   const now = d?.generated_at ?? new Date().toISOString();
   if (!d) {
