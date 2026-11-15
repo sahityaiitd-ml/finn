@@ -1,0 +1,14 @@
+{
+  "name": "finn-android",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Android wrapper for FINN. The app is the live web app inside a WebView; CI builds the APK.",
+  "dependencies": {
+    "@capacitor/android": "^8.6.2",
+    "@capacitor/cli": "^8.6.2",
+    "@capacitor/core": "^8.6.2"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^4.0.0"
+  }
+}

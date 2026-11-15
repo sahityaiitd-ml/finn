@@ -1,0 +1,14 @@
+{
+  "appId": "app.finn.investor",
+  "appName": "FINN",
+  "webDir": "www",
+  "server": {
+    "url": "https://finn-ruddy.vercel.app",
+    "androidScheme": "https",
+    "errorPath": "offline.html"
+  },
+  "android": {
+    "backgroundColor": "#F4EFE8",
+    "allowMixedContent": false
+  }
+}
