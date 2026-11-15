@@ -1,14 +1,26 @@
 import { Suspense } from "react";
 import { Hub } from "@/components/Hub";
-import { Card } from "@/components/ui";
+import { LedgerBuilder } from "@/components/LedgerBuilder";
+import { PromisesView } from "@/components/PromisesView";
+import { getPromises } from "@/lib/api";
+import { fiscalLabel } from "@/lib/format";
 
 async function Content({ params }: { params: Promise<{ symbol: string }> }) {
-  const s = (await params).symbol.toUpperCase();
+  const symbol = (await params).symbol.toUpperCase();
+  const d = await getPromises(symbol);
+  const name = d?.name ?? symbol;
   return (
-    <Hub symbol={s} name={s} active="promises">
-      <Card>
-        <p className="text-[15px] text-ink">Coming in a later milestone.</p>
-      </Card>
+    <Hub
+      symbol={symbol}
+      name={name}
+      active="promises"
+      asOf={d?.reported_through ? `Results through ${fiscalLabel(d.reported_through)}` : undefined}
+    >
+      {d && d.rows.length > 0 ? (
+        <PromisesView data={d} />
+      ) : (
+        <LedgerBuilder symbol={symbol} calls={d?.calls ?? []} />
+      )}
     </Hub>
   );
 }

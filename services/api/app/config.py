@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     supabase_service_key: str = ""
     groq_api_key: str = ""
     gemini_api_key: str = ""
+    gemini_model: str = "gemini-3.5-flash"  # 2.5 is closed to new users
+    gemini_api_keys: str = ""  # optional, comma-separated; rotated on rate limits
 
 
 settings = Settings()

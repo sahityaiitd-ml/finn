@@ -72,13 +72,13 @@ def test_bank_format_unsupported():
 def test_tcs_consolidated():
     r = parsed("TCS")
     d = to_dict(r)
-    assert r.status == "ok" and r.basis == "consolidated" and r.column_ok == [True] * 3
-    assert d["metrics"]["revenue"]["values"] == [73188, 72275, 65799]
-    assert d["metrics"]["pbt"]["values"] == [18638, 17944, 16068]
-    assert d["metrics"]["pat"]["values"] == [13934, 13420, 12131]
+    assert r.status == "ok" and r.basis == "consolidated" and r.column_ok[:3] == [True] * 3
+    assert d["metrics"]["revenue"]["values"][:3] == [73188, 72275, 65799]
+    assert d["metrics"]["pbt"]["values"][:3] == [18638, 17944, 16068]
+    assert d["metrics"]["pat"]["values"][:3] == [13934, 13420, 12131]
     # EBITDA = PBT(pre-exceptional) + finance cost + D&A - other income, done in Python
     assert r.derived["ebitda"][0] == 18638 + 252 + 1262 - 1337
-    assert r.derived["exceptional"] == [0, -668, -1135]  # shown separately, signed
+    assert r.derived["exceptional"][:3] == [0, -668, -1135]  # shown separately, signed
     assert r.flags == []
     assert d["metrics"]["revenue"]["page"] == 8  # every figure carries its page
 
@@ -100,7 +100,7 @@ def test_tata_steel_handles_jv_line_and_flags_exceptional():
 
 def test_dabur_ocr_damage_fails_only_the_damaged_column():
     r = parsed("DABUR")
-    assert r.status == "ok" and r.column_ok == [True, True, False]
+    assert r.status == "ok" and r.column_ok[:3] == [True, True, False]
     assert r.derived["ebitda"][2] is None  # year-ago column shows "see PDF", not a guess
     assert "other_income_gt_20pct_pbt" in r.flags
 
@@ -108,7 +108,7 @@ def test_dabur_ocr_damage_fails_only_the_damaged_column():
 def test_maruti_scanned_page_never_shows_a_guess():
     r = parsed("MARUTI")
     assert r.status == "see_pdf"
-    assert r.column_ok == [False, False, False]
+    assert r.column_ok[:3] == [False, False, False]
     assert r.derived == {}
 
 
@@ -134,3 +134,15 @@ def test_restatement_and_basis_switch_flags():
     }
     assert restatement_flags(cur, prior) == ["basis_switch", "restated_periods"]
     assert restatement_flags(cur, None) == []
+
+
+def test_dixon_squashed_spaces_and_blank_cells():
+    """The text layer reads 'Revenuefrom operations' and 'Profitbefore tax'; a blank finance-cost
+    cell must fail only the full-year column, never be guessed."""
+    r = parsed("DIXON")
+    assert r.status == "ok" and r.basis == "consolidated" and r.unit == "crore"
+    assert r.column_ok == [True, True, True, True, True, False]
+    assert r.metrics["revenue"].values[0] == 21793.64
+    assert r.metrics["pat"].values[0] == 410.87
+    assert r.derived["ebitda"][0] == round(532.35 + 25.95 + 110.06 - 68.73, 4)
+    assert r.derived["ebitda"][5] is None

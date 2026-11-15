@@ -42,6 +42,7 @@ export type DocPage = {
   kind: string;
   period: string;
   text: string;
+  highlight?: { start: number; end: number; score: number } | null;
 };
 
 export type DigestItem = {
@@ -68,6 +69,51 @@ export type Digest = {
   caught_up: boolean;
 };
 
+export type LedgerRow = {
+  id: string;
+  quote: string;
+  page: number;
+  sha256: string;
+  call_period: string;
+  call: string;
+  metric_label: string;
+  status: "Delivered" | "Missed" | "Partly" | "Vague" | "Not yet due" | "No comparable actual";
+  target: string;
+  period: string | null;
+  reported: string | null;
+  reason: string | null;
+  source: { sha256: string; page: number; line: string } | null;
+};
+
+export type Promises = {
+  symbol: string;
+  name: string;
+  calls: { period: string; pages: number }[];
+  rows: LedgerRow[];
+  counts: Record<string, number>;
+  reported_through: string | null;
+};
+
+export type JobProgress = {
+  period: string;
+  label: string;
+  pages: number;
+  status: string;
+  promises: number;
+};
+export type Job = {
+  id: string;
+  status: "queued" | "running" | "done" | "failed";
+  result: {
+    state?: string;
+    progress?: JobProgress[];
+    links?: { label: string; url: string }[];
+    reason?: string;
+    errors?: { call: string; error: string }[];
+  } | null;
+  error: string | null;
+};
+
 async function get<T>(path: string): Promise<T | null> {
   try {
     const r = await fetch(`${API_URL}${path}`, { cache: "no-store" });
@@ -78,11 +124,21 @@ async function get<T>(path: string): Promise<T | null> {
 }
 
 export const getDigest = (window: string) => get<Digest>(`/digest?window=${window}`);
+export const getPromises = (symbol: string) => get<Promises>(`/promises/${symbol}`);
 export const getHealth = () => get<Health>("/health");
 export const getResults = (symbol: string) => get<ResultsView>(`/results/${symbol}/latest`);
-export const getDocPage = (sha: string, n: number) => get<DocPage>(`/docs/${sha}/page/${n}`);
+export const getDocPage = (sha: string, n: number, q?: string) =>
+  get<DocPage>(`/docs/${sha}/page/${n}${q ? `?q=${encodeURIComponent(q)}` : ""}`);
 
-export function sourceHref(sha: string, page: number | null, line?: string | null): string {
-  const q = line ? `?line=${encodeURIComponent(line)}` : "";
-  return `/source/${sha}/${page ?? 1}${q}`;
+export function sourceHref(
+  sha: string,
+  page: number | null,
+  line?: string | null,
+  quote?: string | null,
+): string {
+  const qs = new URLSearchParams();
+  if (line) qs.set("line", line);
+  if (quote) qs.set("q", quote);
+  const q = qs.toString();
+  return `/source/${sha}/${page ?? 1}${q ? `?${q}` : ""}`;
 }
