@@ -189,13 +189,15 @@ export function TodayFeed({ digest, w, now }: { digest: Digest; w: string; now: 
           </div>
         )}
 
-        {todo.map((it) =>
-          it.alert ? (
-            <AlertCard key={it.id} it={it} onReview={review} />
-          ) : (
-            <Card key={it.id} it={it} onReview={review} />
-          ),
-        )}
+        <div className="grid gap-3 lg:grid-cols-2 lg:items-start">
+          {todo.map((it) =>
+            it.alert ? (
+              <AlertCard key={it.id} it={it} onReview={review} />
+            ) : (
+              <Card key={it.id} it={it} onReview={review} />
+            ),
+          )}
+        </div>
 
         {done.length > 0 && (
           <section className="rounded-[16px] bg-surface p-4 shadow-card">

@@ -9,7 +9,7 @@ async function Content() {
   return (
     <>
       <header className="bg-surface px-5 pb-4 pt-6">
-        <div className="mx-auto flex max-w-[1024px] flex-col gap-[14px]">
+        <div className="mx-auto flex max-w-[640px] flex-col gap-[14px]">
           <div className="flex items-center gap-[10px]">
             <Link href="/profile" aria-label="Back to Profile" className="-m-3 p-3 text-ink-2">
               <ArrowLeft />
@@ -20,7 +20,7 @@ async function Content() {
           <p className="text-[13px] text-ink-2">How far back Today looks by default.</p>
         </div>
       </header>
-      <div className="mx-auto w-full max-w-[1024px] px-4 pb-28 pt-4">
+      <div className="mx-auto w-full max-w-[640px] px-4 pb-28 pt-4">
         <WindowPicker initial={s?.window_hours ?? 24} />
       </div>
     </>

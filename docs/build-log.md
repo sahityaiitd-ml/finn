@@ -44,3 +44,11 @@
 - **Bugs the browser caught, not the unit tests:** (1) the API's CORS allowed only GET/POST, so PUT/DELETE settings silently failed; (2) my digest edit had not applied (a formatter had reflowed the block), so alerts never reached Today; (3) a read-only switch carried a click handler, which a server-rendered page cannot do and `next build` does not detect. Each now has a regression test or an endpoint-level test.
 - **Data pitfall:** the API returns at most 1,000 rows per request; price history is now read in pages. Before the fix the dry run silently dropped the newest 134 rows.
 - **Demo check:** with temporary sensitive thresholds (1.3× / 1.5%) the real data produced four alerts, which rendered correctly on Today; they were deleted and the defaults restored.
+
+## 2026-11-15 — M6 polish, docs, deploy kit
+- **Source bottom sheet** from Figma 06/06b: opens at the cited page (≈75% height), highlights the cited line or the fuzzy-located quote span, shows "FINN read … Matches the page exactly" or "Line not located", previous/next page, Copy citation, and Open PDF (a signed link, since the bucket is private). Esc and the backdrop close it; it falls back to a normal page link without JavaScript.
+- **Two-column layout at ≥ 1024 px** for Today, Promises and Results; settings pages stay one readable column.
+- **Offline snapshot** (`data/demo/snapshot/`): filings and the precomputed promise ledgers, restored into empty tables by `jobs.load_demo`.
+- **Deploy kit:** Hugging Face Space metadata, an optional `deploy-space` workflow (does nothing until `HF_TOKEN`/`HF_SPACE` are set), `docs/deploy.md`. The Docker image could not be built here (no Docker on this machine); its Python step was reproduced in a clean `uv sync --no-dev` environment and every module imports. Removed the unused Tesseract install from the Dockerfile.
+- **Docs:** README in the requested order with real numbers (52 distinct model calls over the whole build; 90/90 filings classified by rules), architecture, six screenshots at 390 px, and the covering-email draft addressed per the brief.
+- **Checked:** sheet opens on a results line and a transcript quote, closes with Esc, pages navigate; laptop layout at 1100 px. The amber "Line not located" state was also checked in the browser with a temporary test page (since deleted). Not checked: the deployed apps.

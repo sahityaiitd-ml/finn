@@ -1,0 +1,741 @@
+[
+ {
+  "guidance_id": "01502ce7-5700-498e-8274-3d85ce05e77c",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "0522398f-104b-4cff-9c3d-1dec11d5b483",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "0c359a52-f316-46bc-a558-befef30c83ca",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "₹300–₹350 Cr"
+  }
+ },
+ {
+  "guidance_id": "0d73dbda-5c60-4b2d-b1f0-8337b7d933c2",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY28",
+   "reason": "FY28 has not been reported yet",
+   "target": "180–190"
+  }
+ },
+ {
+  "guidance_id": "0dd3da60-32be-48ee-9094-521ceff65c8d",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "0f2110ff-33b9-447f-9ca7-211173f61591",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "₹170–₹200 Cr"
+  }
+ },
+ {
+  "guidance_id": "0fc81191-906e-4807-8e3e-f46658958125",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY28",
+   "reason": "FY28 has not been reported yet",
+   "target": "around ₹1,700 Cr"
+  }
+ },
+ {
+  "guidance_id": "0fcb447a-b3a4-4da4-ac80-50a67a926179",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "period": "Q2 FY27",
+   "reason": "no matching figure in the results",
+   "target": "20–25%"
+  }
+ },
+ {
+  "guidance_id": "1215df69-3fa7-4107-85f5-28c8b111b964",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "period": "Q1 FY27",
+   "reason": "no matching figure in the results",
+   "target": "10% or more"
+  }
+ },
+ {
+  "guidance_id": "128fd597-7f60-474b-82dd-8b8092050a55",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "₹1,100–₹1,200 Cr"
+  }
+ },
+ {
+  "guidance_id": "159ecac6-5915-4bd4-a06e-74abf6fd81c5",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "period": "Q2 FY27",
+   "reason": "no matching figure in the results",
+   "target": "10% or more"
+  }
+ },
+ {
+  "guidance_id": "165388f2-0c3c-4613-9151-b3d03fa324c1",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY28",
+   "reason": "FY28 has not been reported yet",
+   "target": "8–10"
+  }
+ },
+ {
+  "guidance_id": "1af8a798-8dc4-40fd-b746-587a7fa39e92",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "1fd2b0dc-b2be-4fae-a57e-fa711f1df8e6",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "period": "Q3 FY26",
+   "reason": "not a metric the results report",
+   "target": "5–10"
+  }
+ },
+ {
+  "guidance_id": "20e98b38-472a-4609-85a9-01d4162cf95d",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "26–28%"
+  }
+ },
+ {
+  "guidance_id": "227ab1f7-98ce-4aa9-8f82-0df1945409c0",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "₹5,500–₹6,000 Cr"
+  }
+ },
+ {
+  "guidance_id": "27b05e66-18ac-4249-a57d-8a791e364c91",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "80–100"
+  }
+ },
+ {
+  "guidance_id": "28d9d1e1-4915-4873-8fcd-9e55d6223474",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "29bf19ea-2d85-47f4-802c-76ca41466ea9",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "2d407f89-eced-4572-a6f7-7d8602a2df41",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "period": "Q4 FY26",
+   "reason": "no matching figure in the results",
+   "target": "around 2%"
+  }
+ },
+ {
+  "guidance_id": "2e5c7c82-0614-4087-a468-7f77232afc16",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY27",
+   "reason": "FY27 has not been reported yet",
+   "target": "around ₹1,200 Cr"
+  }
+ },
+ {
+  "guidance_id": "3185682d-2758-4b33-b14f-4e9931b5824e",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "340eb6d7-44c8-4be9-a81e-b3699c9466df",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY27",
+   "reason": "FY27 has not been reported yet",
+   "target": "10% or more"
+  }
+ },
+ {
+  "guidance_id": "38516bc3-8928-4842-a076-f6d67acfc4bc",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "38–39"
+  }
+ },
+ {
+  "guidance_id": "38a6ec20-cf8b-4f06-b385-3a5f35162e48",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY27",
+   "reason": "FY27 has not been reported yet",
+   "target": "around 34"
+  }
+ },
+ {
+  "guidance_id": "3f268f78-757b-4161-a8ab-1e183d6faddb",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "around 2300"
+  }
+ },
+ {
+  "guidance_id": "417959a5-e315-44d9-aa03-716594050a7f",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY27",
+   "reason": "FY27 has not been reported yet",
+   "target": "around ₹6,000 Cr"
+  }
+ },
+ {
+  "guidance_id": "4327dfa9-0d6e-4b43-90ce-22b2e4effcf9",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "period": "Q3 FY26",
+   "reason": "not a metric the results report",
+   "target": "around 1500"
+  }
+ },
+ {
+  "guidance_id": "4652931a-f31d-4f8e-a687-11556e6594e1",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY27",
+   "reason": "FY27 has not been reported yet",
+   "target": "10% or more"
+  }
+ },
+ {
+  "guidance_id": "47af9059-7da4-4537-89eb-4b77f0fc701f",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "1% or more"
+  }
+ },
+ {
+  "guidance_id": "48b77dec-37f5-488c-9864-8c62c8f1b845",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "4adf8e9c-f4f9-41ab-8011-2f6b79f724c9",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY27",
+   "reason": "FY27 has not been reported yet",
+   "target": "10% or more"
+  }
+ },
+ {
+  "guidance_id": "4fb190aa-385e-4487-9929-b286e7b6dcff",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "Q3 FY27",
+   "reason": "Q3 FY27 has not been reported yet",
+   "target": "7–7.5"
+  }
+ },
+ {
+  "guidance_id": "52c5f47a-390a-4eef-9876-f5fd86ef67ce",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "around 3.5"
+  }
+ },
+ {
+  "guidance_id": "52df058d-510f-4846-a4a6-b89fed8dad8e",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "period": "FY26",
+   "reason": "no matching figure in the results",
+   "target": "around ₹1,500 Cr"
+  }
+ },
+ {
+  "guidance_id": "55417285-dc1a-4c29-8fea-79925e9246e3",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "57042aa3-23a1-4b57-8191-24d30eb12548",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY27",
+   "reason": "FY27 has not been reported yet",
+   "target": "around ₹7,100 Cr"
+  }
+ },
+ {
+  "guidance_id": "572460a9-881f-40d6-9145-6403426ed196",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY28",
+   "reason": "FY28 has not been reported yet",
+   "target": "20–21"
+  }
+ },
+ {
+  "guidance_id": "59e1cd28-8841-4814-aa5e-1fdf3e5605ba",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY27",
+   "reason": "FY27 has not been reported yet",
+   "target": "10% or more"
+  }
+ },
+ {
+  "guidance_id": "63fe9e02-6fff-4e64-8140-7cd5fbf4793e",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "Q3 FY27",
+   "reason": "Q3 FY27 has not been reported yet",
+   "target": "30–33"
+  }
+ },
+ {
+  "guidance_id": "65d8a61f-b29c-4e49-9607-c61ce6358286",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "20–25%"
+  }
+ },
+ {
+  "guidance_id": "693011c0-60bf-4d10-a75c-34294a25839a",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY27",
+   "reason": "FY27 has not been reported yet",
+   "target": "₹3,500–₹4,000 Cr"
+  }
+ },
+ {
+  "guidance_id": "72cc2dcd-3553-4b18-a1af-6aa25ea7c8d2",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "7c789e77-48dc-4cb0-a601-59be4dbe081c",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "25% or more"
+  }
+ },
+ {
+  "guidance_id": "80f6f0a9-5b76-47c4-9ca6-5e3ee4893b75",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "period": "Q1 FY27",
+   "reason": "not a metric the results report",
+   "target": "150–200"
+  }
+ },
+ {
+  "guidance_id": "83361a0f-6c1d-4bd5-8c3a-6bb12f75e8ae",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "150–200"
+  }
+ },
+ {
+  "guidance_id": "85716aea-2b5f-4feb-8052-9fd464c872de",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "period": "Q3 FY26",
+   "reason": "not a metric the results report",
+   "target": "around 30"
+  }
+ },
+ {
+  "guidance_id": "8ddddf0b-309e-4234-ba71-a4d2a110db8d",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "8e69d3e1-b85c-4a9c-988c-4f5b1e5c6f82",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "period": "FY26",
+   "reason": "no matching figure in the results",
+   "target": "₹5,500–₹6,000 Cr"
+  }
+ },
+ {
+  "guidance_id": "956ee87b-3786-43e8-9f03-dfcabff79a64",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY27",
+   "reason": "FY27 has not been reported yet",
+   "target": "₹4,000 Cr or more"
+  }
+ },
+ {
+  "guidance_id": "9a04c10c-1b74-4403-834d-a06d305528b4",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "period": "Q4 FY26",
+   "reason": "not a metric the results report",
+   "target": "7–7.5"
+  }
+ },
+ {
+  "guidance_id": "9a664f08-3ccf-4405-a1cc-f01e3c1af196",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY28",
+   "reason": "FY28 has not been reported yet",
+   "target": "₹350–₹400 Cr"
+  }
+ },
+ {
+  "guidance_id": "9b291e50-81a9-48d6-ae67-0b8833d3aaa7",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "2.8–3.2%"
+  }
+ },
+ {
+  "guidance_id": "9b297b3c-da81-4cde-8d17-03494f86eba6",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY27",
+   "reason": "FY27 has not been reported yet",
+   "target": "3.5–4"
+  }
+ },
+ {
+  "guidance_id": "a056e48c-f3f4-4cb8-9a1c-a484a7d19954",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "a14b0007-65eb-471a-b1f2-2fc8d51388ad",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "a2b84065-1e64-4464-8c75-18727eb3e538",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "₹7,500–₹8,000 Cr"
+  }
+ },
+ {
+  "guidance_id": "a7ebbdb3-42a1-4b7d-81a4-d90909394aee",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY27",
+   "reason": "FY27 has not been reported yet",
+   "target": "₹6,700–₹7,000 Cr"
+  }
+ },
+ {
+  "guidance_id": "aa82d2c0-9212-499f-9fdc-3bacfa681672",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "around ₹2,500 Cr"
+  }
+ },
+ {
+  "guidance_id": "af3a91cf-839d-4f66-a743-efcc7704c7b3",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "period": "Q3 FY26",
+   "reason": "not a metric the results report",
+   "target": "around 6"
+  }
+ },
+ {
+  "guidance_id": "b6e7dc65-b3b5-445a-95cd-55dd87e47673",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY28",
+   "reason": "FY28 has not been reported yet",
+   "target": "10% or more"
+  }
+ },
+ {
+  "guidance_id": "b73b09dd-76ac-47d9-8f71-b5a869ed01ff",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "bb1067de-25bc-4585-9c99-0d97580b00fe",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY28",
+   "reason": "FY28 has not been reported yet",
+   "target": "₹1,200–₹1,300 Cr"
+  }
+ },
+ {
+  "guidance_id": "bbb9fe84-ad62-4638-8a1a-6d626f74daf6",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "bff7c9b3-9697-42e6-b5ec-e852c512431e",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "around ₹1,000 Cr"
+  }
+ },
+ {
+  "guidance_id": "c28ef290-10e6-4e27-bac6-96a06d3edd13",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "c47d970f-866c-4e07-86cf-14aaba53056c",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "around 20%"
+  }
+ },
+ {
+  "guidance_id": "d0056e94-7732-483a-a582-88eac6b64ba9",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "26–28%"
+  }
+ },
+ {
+  "guidance_id": "d0480a9b-7dda-4035-b2b1-9a2bf766e8f8",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "period": "Q4 FY26",
+   "reason": "not a metric the results report",
+   "target": "around 5"
+  }
+ },
+ {
+  "guidance_id": "d2d63fcd-e772-49ff-9e44-fb2fd90e80d0",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "d542a1e4-e3d7-49c4-83b4-39be550ab518",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "up to 23%"
+  }
+ },
+ {
+  "guidance_id": "dd021bee-8ca2-4980-aead-709dd69b5eaf",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY27",
+   "reason": "FY27 has not been reported yet",
+   "target": "10% or more"
+  }
+ },
+ {
+  "guidance_id": "df3c5b61-0769-4407-a74e-bb3aa539702d",
+  "actual_id": null,
+  "status": "No comparable actual",
+  "detail": {
+   "reason": "the period is not specific",
+   "target": "10–15"
+  }
+ },
+ {
+  "guidance_id": "e26822c3-8c26-4f64-9ff8-41badd6634db",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "e8e2e8df-6137-4e50-810f-474a29091117",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "eb356c69-e857-4906-a1c2-bddcb765010d",
+  "actual_id": null,
+  "status": "Vague",
+  "detail": {
+   "reason": "no number given, so it is never scored",
+   "target": ""
+  }
+ },
+ {
+  "guidance_id": "edbfb5e3-ac3a-4c7a-90d4-97a9c7c57127",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY27",
+   "reason": "FY27 has not been reported yet",
+   "target": "10% or more"
+  }
+ },
+ {
+  "guidance_id": "f3ef0d87-1aea-466f-899b-89eaedf7a6c1",
+  "actual_id": null,
+  "status": "Not yet due",
+  "detail": {
+   "period": "FY28",
+   "reason": "FY28 has not been reported yet",
+   "target": "₹2,500–₹3,000 Cr"
+  }
+ }
+]

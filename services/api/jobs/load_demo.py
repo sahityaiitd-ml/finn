@@ -46,6 +46,11 @@ def main() -> None:
             + f"{d.kind:10} {d.symbol:10} {d.period} {sha[:10]}"
         )
 
+    # last: the snapshot references the documents loaded above (guidance -> documents)
+    from jobs.snapshot import restore
+
+    print("snapshot restored into empty tables:", restore(db))
+
 
 if __name__ == "__main__":
     sys.exit(main())

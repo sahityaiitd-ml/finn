@@ -78,6 +78,7 @@ function Reported({ r }: { r: LedgerRow }) {
         <SourceLink
           href={sourceHref(r.source.sha256, r.source.page, r.source.line)}
           label={`Source · results filing · p.${r.source.page}`}
+          read={`${r.metric_label} ${r.reported}`}
         />
       )}
     </>
@@ -105,6 +106,7 @@ function Row({ r }: { r: LedgerRow }) {
       <SourceLink
         href={sourceHref(r.sha256, r.page, null, r.quote)}
         label={`Source · ${r.call} · p.${r.page}`}
+        read={`“${r.quote.length > 60 ? r.quote.slice(0, 60) + "…" : r.quote}”`}
       />
       <p className="text-[12px] font-medium text-muted">Reported</p>
       <Reported r={r} />
@@ -178,9 +180,11 @@ export function PromisesView({ data }: { data: Promises }) {
         </div>
       </div>
 
-      {shown.map((r) => (
-        <Row key={r.id} r={r} />
-      ))}
+      <div className="grid gap-3 lg:grid-cols-2 lg:items-start">
+        {shown.map((r) => (
+          <Row key={r.id} r={r} />
+        ))}
+      </div>
     </>
   );
 }

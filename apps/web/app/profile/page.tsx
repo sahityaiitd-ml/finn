@@ -16,7 +16,7 @@ async function Content() {
   return (
     <>
       <header className="bg-surface px-5 pb-5 pt-6">
-        <div className="mx-auto flex max-w-[1024px] flex-col gap-[14px]">
+        <div className="mx-auto flex max-w-[640px] flex-col gap-[14px]">
           <h1 className="text-[28px] text-ink">Profile</h1>
           <div className="flex items-center gap-[14px]">
             <span className="grid size-16 place-items-center rounded-full bg-sage-tint text-[24px] font-semibold text-sage-text">
@@ -30,7 +30,7 @@ async function Content() {
         </div>
       </header>
 
-      <div className="mx-auto flex w-full max-w-[1024px] flex-col gap-3 px-4 pb-28 pt-4">
+      <div className="mx-auto flex w-full max-w-[640px] flex-col gap-3 px-4 pb-28 pt-4">
         <Card>
           <h2 className="text-[16px] font-medium text-ink">Your coverage</h2>
           <div className="flex">
