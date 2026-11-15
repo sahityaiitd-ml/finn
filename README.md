@@ -40,7 +40,7 @@ Every number and quote links to its source page.
 
 ```mermaid
 flowchart LR
-  U[Phone PWA · Next.js on Vercel] -->|REST| API[FastAPI · HF Space]
+  U[Phone PWA · Next.js on Vercel] -->|REST| API[FastAPI · Render]
   GH[GitHub Actions cron] -->|POST /jobs/* + secret| API
   API --> DB[(Supabase Postgres + Storage)]
   API --> SC[screener.in listings]
@@ -64,7 +64,7 @@ Details: [docs/architecture.md](docs/architecture.md), decisions in [docs/decisi
 - A promise ledger is **4 calls per ticker** (the last four calls, ~6 pages each, about 25,000 input tokens in total). Ledgers are keyed by symbol, transcript hashes, results hashes, prompt and rules version, so they rebuild only when an input changes.
 - **Page picking** sends only the six most forward-looking pages of a 20–35 page transcript.
 - Classification is rules-first: no model was needed to classify any of the 90 filings. The small model only wrote ≤ 25-word summaries for the 5 whose headlines say little.
-- Everything runs on free tiers (Vercel, Hugging Face Spaces, Supabase, GitHub Actions, Groq, Gemini).
+- Everything runs on free tiers (Vercel, Render, Supabase, GitHub Actions, Groq, Gemini).
 
 ## Run locally
 
@@ -79,7 +79,7 @@ Tests: `cd services/api && uv run pytest` (147) · `cd apps/web && pnpm test` (8
 
 ## Deploy
 
-[docs/deploy.md](docs/deploy.md): Supabase → Hugging Face Space → Vercel → GitHub Actions secrets.
+[docs/deploy.md](docs/deploy.md): Supabase → Render → Vercel → GitHub Actions secrets.
 
 ## Decisions and trade-offs
 

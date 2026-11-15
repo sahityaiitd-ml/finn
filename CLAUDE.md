@@ -12,7 +12,7 @@
 
 ## Stack
 - `apps/web`: Next.js App Router, TypeScript strict, Tailwind; tokens in `styles/tokens.css`.
-- `services/api`: FastAPI, Python 3.11, uv, ruff, pytest; Docker for HF Spaces.
+- `services/api`: FastAPI, Python 3.11, uv, ruff, pytest; Docker on Render.
 - Supabase Postgres + Storage; GitHub Actions cron.
 - Models: rules first → Groq 8B (classify/summarise) → Groq 70B (guidance) → Gemini Flash (vision, odd mappings).
 - Cache every model call by sha256(model + prompt_version + input).

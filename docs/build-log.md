@@ -52,3 +52,7 @@
 - **Deploy kit:** Hugging Face Space metadata, an optional `deploy-space` workflow (does nothing until `HF_TOKEN`/`HF_SPACE` are set), `docs/deploy.md`. The Docker image could not be built here (no Docker on this machine); its Python step was reproduced in a clean `uv sync --no-dev` environment and every module imports. Removed the unused Tesseract install from the Dockerfile.
 - **Docs:** README in the requested order with real numbers (52 distinct model calls over the whole build; 90/90 filings classified by rules), architecture, six screenshots at 390 px, and the covering-email draft addressed per the brief.
 - **Checked:** sheet opens on a results line and a transcript quote, closes with Esc, pages navigate; laptop layout at 1100 px. The amber "Line not located" state was also checked in the browser with a temporary test page (since deleted). Not checked: the deployed apps.
+
+## 2026-11-15 — Deploy: Hugging Face → Render
+- **Finding:** Hugging Face now makes Docker Spaces a paid plan; only Static Spaces are free. The kickoff's "FastAPI on a HF Space" is no longer possible on a free tier.
+- **Change:** the API deploys to Render's free web service from `render.yaml` (Docker, health check `/health`, secrets entered in the dashboard). The Dockerfile now listens on the platform's `PORT`. The Hugging Face metadata and the `deploy-space` workflow are removed. The design is unchanged: the service sleeps, so scheduling stays in GitHub Actions and the cron retries while it wakes. ADR 0001 has an amendment.

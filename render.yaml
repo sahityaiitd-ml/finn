@@ -1,0 +1,23 @@
+# Render blueprint: New -> Blueprint -> pick this repo. Secrets are entered in the dashboard.
+services:
+  - type: web
+    name: finn-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./services/api/Dockerfile
+    dockerContext: ./services/api
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: JOB_SECRET
+        sync: false
+      - key: CORS_ORIGINS   # your Vercel URL
+        sync: false

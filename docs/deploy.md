@@ -1,6 +1,6 @@
 # Deploy
 
-Everything runs on free tiers. Order matters: Supabase → Hugging Face Space → Vercel → GitHub secrets.
+Everything runs on free tiers. Order matters: Supabase → Render → Vercel → GitHub secrets.
 
 ## 1. Supabase (once)
 1. New project. SQL Editor: run `supabase/migrations/0001_init.sql`, then `0002_ingestion.sql`.
@@ -14,30 +14,29 @@ Everything runs on free tiers. Order matters: Supabase → Hugging Face Space �
    snapshot (filings and the precomputed promise ledgers). Large PDFs (> 5 MB) are not in git; put
    them in `data/demo/results/` first, or skip them and the Results tab shows "No results parsed".
 
-## 2. Hugging Face Space (the API)
-1. New Space → SDK **Docker** → blank → CPU basic (free).
-2. Settings → Variables and secrets, add secrets: `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`,
-   `GROQ_API_KEY`, `GEMINI_API_KEY` (and optionally `GEMINI_API_KEYS`), `JOB_SECRET`; and the
-   variable `CORS_ORIGINS` = your Vercel URL (comma-separated if more than one).
-3. Push the API. Either let the repo do it:
-   - GitHub repo → Settings → Secrets and variables → Actions: secret `HF_TOKEN` (a *write* token),
-     variable `HF_SPACE` = `your-name/finn-api`. Then run the **deploy-space** workflow.
-   - or push by hand: copy `services/api` to a folder, `git init`, and push to
-     `https://huggingface.co/spaces/your-name/finn-api`.
-4. Open `https://your-name-finn-api.hf.space/health`. It should say `"status":"ok"` and
-   `"db_configured":true`.
+## 2. Render (the API)
+Hugging Face made Docker Spaces a paid feature, so the API runs on Render's free web service. It
+sleeps when idle; the cron workflow retries while it wakes (about a minute).
+1. render.com → sign in with GitHub → **New → Blueprint** → pick the `finn` repo. Render reads
+   `render.yaml` and proposes a free web service `finn-api`.
+2. Enter the secrets when asked (paste the values from your `.env`): `SUPABASE_URL`,
+   `SUPABASE_SERVICE_KEY`, `GROQ_API_KEY`, `GEMINI_API_KEY` (several keys may be comma-separated),
+   `JOB_SECRET`. Leave `CORS_ORIGINS` for now and set it after Vercel.
+3. Deploy. The first Docker build takes a few minutes.
+4. Open `https://finn-api.onrender.com/health` (the exact URL is on the service page). It should
+   say `"status":"ok"` and `"db_configured":true`.
 
 ## 3. Vercel (the web app)
 1. Import the GitHub repo. **Root Directory:** `apps/web`. Framework: Next.js.
-2. Environment variables: `NEXT_PUBLIC_API_URL` = the Space URL (no trailing slash).
-3. Deploy. Then put the Vercel URL in the Space's `CORS_ORIGINS` and restart the Space.
+2. Environment variables: `NEXT_PUBLIC_API_URL` = the Render URL (no trailing slash).
+3. Deploy. Then set `CORS_ORIGINS` on the Render service to your Vercel URL (comma-separated if more than one) and let it redeploy.
 4. On a phone: open the Vercel URL, then "Add to Home Screen" (it is a PWA).
 
 ## 4. Cron (GitHub Actions)
-Repo → Settings → Secrets and variables → Actions: secrets `API_URL` (the Space URL) and
-`JOB_SECRET` (same value as in the Space). The `cron` workflow then calls
+Repo → Settings → Secrets and variables → Actions: secrets `API_URL` (the Render URL) and
+`JOB_SECRET` (same value as on Render). The `cron` workflow then calls
 `POST /jobs/fetch-filings` every 30 minutes on market days and `POST /jobs/eod` at 16:30 IST. The
-Space sleeps when idle, so the workflow retries while it wakes. Run it once by hand with
+service sleeps when idle, so the workflow retries while it wakes. Run it once by hand with
 **Run workflow** to check.
 
 ## Checks
