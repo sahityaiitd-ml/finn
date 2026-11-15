@@ -20,3 +20,10 @@
 - Flags built: other income > 20% of PBT, exceptional item, basis switch and restated periods (need a prior stored filing; unit-tested), standalone fallback.
 - UI: Results tab from Figma node 23:487, bottom nav, hub tabs, minimal source page with the cited line highlighted.
 - Decision: statement pages saved as small fixtures so all five filings are tested in CI even though four PDFs are over 5 MB.
+
+## 2026-11-15 — M3 filings digest
+- **Classifier:** rules-first, all 17 categories, never-collapse floor, Python materiality. 90/90 live filings classified by rules; the model path is exercised by tests (fake client) and was run live on 4 leftovers earlier, then cached.
+- **A real catch:** the model labelled a compliance-officer (KMP) change as "unclassified", which would have hidden it. Fixed with rules, and any model "unsure" now defaults to shown. This is the "filter that labels a material filing routine" risk from the handoff brief.
+- **Digest API:** `/digest?window=24h|3d|7d|30d` ranked by materiality; routine drawer; caught-up flag; `/filings/{id}/reviewed`.
+- **Today screen** from Figma 01 / 01b: window switch, progress, cards, Mark reviewed (persisted), All caught up, routine drawer. Checked at 375px.
+- Known gap: the header count ("N need you") is server-rendered, so it does not drop as items are reviewed.

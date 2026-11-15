@@ -96,3 +96,55 @@ export function Card({ children }: { children: React.ReactNode }) {
     </section>
   );
 }
+
+export function ExternalSourceLink({ href, label }: { href: string; label: string }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex min-h-[44px] items-center gap-1 text-[13px] font-medium text-sage-text"
+    >
+      {label}
+      <ArrowUpRight />
+    </a>
+  );
+}
+
+export function Check({ size = 18 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      aria-hidden
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="10" cy="10" r="8" />
+      <path d="M6.5 10.2l2.4 2.4 4.6-5" />
+    </svg>
+  );
+}
+
+export function Chevron({ open }: { open?: boolean }) {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 20 20"
+      aria-hidden
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={open ? "rotate-90" : ""}
+    >
+      <path d="M8 5l5 5-5 5" />
+    </svg>
+  );
+}
