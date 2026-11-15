@@ -1,0 +1,156 @@
+[
+  {
+    "symbol": "RELIANCE",
+    "name": "Reliance Industries Ltd",
+    "bse_code": "500325",
+    "group": "portfolio",
+    "status": 200
+  },
+  {
+    "symbol": "TCS",
+    "name": "Tata Consultancy Services Ltd",
+    "bse_code": "532540",
+    "group": "portfolio",
+    "status": 200
+  },
+  {
+    "symbol": "INFY",
+    "name": "Infosys Ltd",
+    "bse_code": "500209",
+    "group": "portfolio",
+    "status": 200
+  },
+  {
+    "symbol": "HINDUNILVR",
+    "name": "Hindustan Unilever Ltd",
+    "bse_code": "500696",
+    "group": "portfolio",
+    "status": 200
+  },
+  {
+    "symbol": "ITC",
+    "name": "ITC Ltd",
+    "bse_code": "500875",
+    "group": "portfolio",
+    "status": 200
+  },
+  {
+    "symbol": "LT",
+    "name": "Larsen & Toubro Ltd",
+    "bse_code": "500510",
+    "group": "portfolio",
+    "status": 200
+  },
+  {
+    "symbol": "SUNPHARMA",
+    "name": "Sun Pharmaceutical Industries Ltd",
+    "bse_code": "524715",
+    "group": "portfolio",
+    "status": 200
+  },
+  {
+    "symbol": "MARUTI",
+    "name": "Maruti Suzuki India Ltd",
+    "bse_code": "532500",
+    "group": "portfolio",
+    "status": 200
+  },
+  {
+    "symbol": "TATASTEEL",
+    "name": "Tata Steel Ltd",
+    "bse_code": "500470",
+    "group": "portfolio",
+    "status": 200
+  },
+  {
+    "symbol": "ASIANPAINT",
+    "name": "Asian Paints Ltd",
+    "bse_code": "500820",
+    "group": "portfolio",
+    "status": 200
+  },
+  {
+    "symbol": "TITAN",
+    "name": "Titan Company Ltd",
+    "bse_code": "500114",
+    "group": "portfolio",
+    "status": 200
+  },
+  {
+    "symbol": "ULTRACEMCO",
+    "name": "UltraTech Cement Ltd",
+    "bse_code": "532538",
+    "group": "portfolio",
+    "status": 200
+  },
+  {
+    "symbol": "BHARTIARTL",
+    "name": "Bharti Airtel Ltd",
+    "bse_code": "532454",
+    "group": "portfolio",
+    "status": 200
+  },
+  {
+    "symbol": "DABUR",
+    "name": "Dabur India Ltd",
+    "bse_code": "500096",
+    "group": "portfolio",
+    "status": 200
+  },
+  {
+    "symbol": "POLYCAB",
+    "name": "Polycab India Ltd",
+    "bse_code": "542652",
+    "group": "portfolio",
+    "status": 200
+  },
+  {
+    "symbol": "PIDILITIND",
+    "name": "Pidilite Industries Ltd",
+    "bse_code": "500331",
+    "group": "portfolio",
+    "status": 200
+  },
+  {
+    "symbol": "CEATLTD",
+    "name": "CEAT Ltd",
+    "bse_code": "500878",
+    "group": "portfolio",
+    "status": 200
+  },
+  {
+    "symbol": "AARTIIND",
+    "name": "Aarti Industries Ltd",
+    "bse_code": "524208",
+    "group": "portfolio",
+    "status": 200
+  },
+  {
+    "symbol": "DIXON",
+    "name": "Dixon Technologies (India) Ltd",
+    "bse_code": "540699",
+    "group": "research",
+    "status": 200
+  },
+  {
+    "symbol": "TRENT",
+    "name": "Trent Ltd",
+    "bse_code": "500251",
+    "group": "research",
+    "status": 200
+  },
+  {
+    "symbol": "DMART",
+    "name": "Avenue Supermarts Ltd",
+    "bse_code": "540376",
+    "group": "research",
+    "status": 200
+  },
+  {
+    "symbol": "ASTRAL",
+    "name": "Astral Ltd",
+    "bse_code": "532830",
+    "group": "research",
+    "status": 200
+  }
+]

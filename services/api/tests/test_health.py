@@ -17,7 +17,12 @@ def test_jobs_require_secret():
     assert client.post("/jobs/eod", headers={"x-job-secret": "wrong"}).status_code == 401
 
 
-def test_jobs_accept_secret():
+def test_jobs_accept_secret(monkeypatch):
+    import app.db
+    import jobs.fetch_filings
+
+    monkeypatch.setattr(app.db, "get_client", lambda: object())
+    monkeypatch.setattr(jobs.fetch_filings, "run", lambda db: {"companies": 0})
     h = {"x-job-secret": settings.job_secret}
     assert client.post("/jobs/eod", headers=h).status_code == 200
     assert client.post("/jobs/fetch-filings", headers=h).status_code == 200
