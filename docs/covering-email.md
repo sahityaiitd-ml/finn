@@ -13,7 +13,7 @@ Please find my submission for the AI Engineer Build Challenge.
 - Prototype (open on a phone): https://finn-ruddy.vercel.app (the free API host sleeps when idle, so the first load after a quiet spell can take about a minute)
 - Android app (APK, tap to install): https://github.com/sahityaiitd-ml/finn/releases/download/android-latest/finn.apk (allow "install unknown apps" once; on iPhone, open the prototype link and use Share → Add to Home Screen)
 - Repository: https://github.com/sahityaiitd-ml/finn
-- AI build history: https://github.com/sahityaiitd-ml/finn/blob/main/docs/ai-build-history/claude-code-session.md (the Claude Code conversation, readable and redacted; attached as a file too), plus `docs/build-log.md` for the decisions
+- AI build history (three Claude sessions: research, design and PRD, and the build): https://github.com/sahityaiitd-ml/finn/tree/main/docs/ai-build-history, plus `docs/build-log.md` for the decisions
 
 **What I built.** FINN, a mobile-first investor agent with one rule: evidence, not verdicts.
 - A **ranked filings digest** for an 18-stock demo portfolio: rules classify the filings, a hard floor keeps material types on screen, routine paperwork collapses into one drawer, and the screen ends in "All caught up".
@@ -38,4 +38,5 @@ Every number and quote opens a source sheet at the cited page with the line high
 Thank you for the opportunity.
 
 Regards,
-`<Your name>`
+Sahitya Rankawat
+2023ME21131, IIT Delhi
