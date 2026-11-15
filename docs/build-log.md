@@ -56,3 +56,9 @@
 ## 2026-11-15 — Deploy: Hugging Face → Render
 - **Finding:** Hugging Face now makes Docker Spaces a paid plan; only Static Spaces are free. The kickoff's "FastAPI on a HF Space" is no longer possible on a free tier.
 - **Change:** the API deploys to Render's free web service from `render.yaml` (Docker, health check `/health`, secrets entered in the dashboard). The Dockerfile now listens on the platform's `PORT`. The Hugging Face metadata and the `deploy-space` workflow are removed. The design is unchanged: the service sleeps, so scheduling stays in GitHub Actions and the cron retries while it wakes. ADR 0001 has an amendment.
+
+## 2026-11-15 — Live
+- Deployed: web on Vercel (https://finn-ruddy.vercel.app), API on Render (https://finn-api-d58i.onrender.com). The Render name `finn-api` was already taken, so the service has a random suffix; an early guess at the default URL answered 200 from *someone else's* service (different `/health` body), which is why nothing was sent there.
+- Verified live: health with database connected; digest 11 to review / 21 routine; TCS results with the source sheet (page 8 of 22, line highlighted) and a working signed PDF link; mark-reviewed and an alert-threshold change persisted from the Vercel site; any-ticker path (Titan) returns "not available" with four links; CORS allows only the Vercel origin and localhost.
+- Cron: `POST /jobs/eod` and `POST /jobs/fetch-filings` both ran successfully from GitHub Actions with the secret (18 of 18 symbols priced; 90 filings seen, 0 errors).
+- Test data created during these checks (one reviewed flag, one threshold change) was reset.
