@@ -2,7 +2,7 @@
 
 ```mermaid
 flowchart LR
-  U[Phone PWA · Next.js on Vercel] -->|REST| API[FastAPI · HF Space]
+  U[Phone PWA · Next.js on Vercel] -->|REST| API[FastAPI · Render]
   GH[GitHub Actions cron] -->|POST /jobs/* + secret| API
   API --> DB[(Supabase Postgres + Storage)]
   API --> SC[screener.in listings]
