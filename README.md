@@ -4,7 +4,9 @@
 
 ## Live demo
 
-_Add the Vercel URL here after deploying (see [docs/deploy.md](docs/deploy.md)). Open it on a phone and "Add to Home Screen"._
+**https://finn-ruddy.vercel.app** — open it on a phone and "Add to Home Screen".
+
+The API runs on a free Render instance that sleeps when idle: the **first request after a quiet spell can take about a minute** while it wakes. Give it a moment; later requests are fast.
 
 ## Try it in three steps
 

@@ -14,7 +14,7 @@
 - `apps/web`: Next.js App Router, TypeScript strict, Tailwind; tokens in `styles/tokens.css`.
 - `services/api`: FastAPI, Python 3.11, uv, ruff, pytest; Docker on Render.
 - Supabase Postgres + Storage; GitHub Actions cron.
-- Models: rules first → Groq 8B (classify/summarise) → Groq 70B (guidance) → Gemini Flash (vision, odd mappings).
+- Models: rules first → Groq `gpt-oss-20b` (leftover classification, short summaries) → Gemini `gemini-3.5-flash` (guidance extraction; Groq `gpt-oss-120b` fallback). Scanned pages are not read yet.
 - Cache every model call by sha256(model + prompt_version + input).
 
 ## Commands

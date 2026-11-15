@@ -19,7 +19,7 @@ jobs:
           elif [ "${{ github.event.schedule }}" = "0 11 * * 1-5" ]; then J=eod;
           else J=fetch-filings; fi
           echo "job=$J" >> "$GITHUB_OUTPUT"
-      - name: Call API (retries while the Space wakes)
+      - name: Call API (retries while the service wakes)
         env:
           API_URL: ${{ secrets.API_URL }}
           JOB_SECRET: ${{ secrets.JOB_SECRET }}

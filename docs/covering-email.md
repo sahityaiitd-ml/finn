@@ -10,7 +10,7 @@ Hello,
 Please find my submission for the AI Engineer Build Challenge.
 
 **Links**
-- Prototype (open on a phone): `<LIVE URL>`
+- Prototype (open on a phone): https://finn-ruddy.vercel.app (the free API host sleeps when idle, so the first load after a quiet spell can take about a minute)
 - Repository: https://github.com/sahityaiitd-ml/finn
 - AI build history: attached (Claude Code conversation export), plus `docs/build-log.md` in the repo
 

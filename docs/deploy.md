@@ -43,3 +43,9 @@ service sleeps when idle, so the workflow retries while it wakes. Run it once by
 - `GET /health` → ok, `db_configured: true`.
 - `curl -X POST $API_URL/jobs/eod -H "x-job-secret: $JOB_SECRET"` → `{"status":"done",...}`.
 - Web: Today lists filings; Companies → TCS → Results shows figures with a source link.
+
+## Live deployment (2026-11-15)
+- Web: https://finn-ruddy.vercel.app (Vercel, root `apps/web`)
+- API: https://finn-api-d58i.onrender.com (Render free web service from `render.yaml`)
+- Checked live: `/health` (database connected), the digest, a results figure with its source sheet and signed PDF link, marking a filing reviewed, saving an alert threshold, the any-ticker "not available" path, and both cron jobs run from GitHub Actions.
+- The Render URL has a random suffix because the name `finn-api` was taken. `CORS_ORIGINS` is the Vercel URL plus `http://localhost:3000`.
