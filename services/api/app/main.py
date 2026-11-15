@@ -82,3 +82,59 @@ def parse_results_job() -> dict:
     from jobs.parse_results import run
 
     return {"status": "done", **run(get_client())}
+
+
+@app.get("/digest")
+def digest(portfolio_id: str | None = None, window: str = "24h", as_of: str | None = None) -> dict:
+    from datetime import UTC, datetime
+
+    from app.db import get_client
+    from app.digest import build_digest
+
+    db = get_client()
+    pid = portfolio_id
+    if not pid:
+        p = db.table("portfolios").select("id").order("created_at").limit(1).execute().data
+        if not p:
+            raise HTTPException(status_code=404, detail="no portfolio")
+        pid = p[0]["id"]
+    syms = [
+        r["symbol"]
+        for r in db.table("portfolio_holdings")
+        .select("symbol")
+        .eq("portfolio_id", pid)
+        .execute()
+        .data
+    ]
+    names = {
+        c["symbol"]: c["name"]
+        for c in db.table("companies").select("symbol,name").in_("symbol", syms).execute().data
+    }
+    now = datetime.fromisoformat(as_of) if as_of else datetime.now(UTC)
+    rows = (
+        db.table("filings")
+        .select("*")
+        .in_("symbol", syms)
+        .gte("published_at", "2000-01-01")
+        .execute()
+        .data
+    )
+    return {"portfolio_id": pid, **build_digest(rows, names, now, window)}
+
+
+@app.post("/filings/{filing_id}/reviewed")
+def mark_reviewed(filing_id: str, reviewed: bool = True) -> dict:
+    from app.db import get_client
+
+    res = get_client().table("filings").update({"reviewed": reviewed}).eq("id", filing_id).execute()
+    if not res.data:
+        raise HTTPException(status_code=404, detail="filing not found")
+    return {"id": filing_id, "reviewed": reviewed}
+
+
+@app.post("/jobs/classify-filings", dependencies=[Depends(require_job_secret)])
+def classify_filings_job() -> dict:
+    from app.db import get_client
+    from jobs.classify_filings import run
+
+    return {"status": "done", **run(get_client())}
