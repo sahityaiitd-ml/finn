@@ -108,4 +108,4 @@ Event and governance timeline, new-executive bio, thesis tracking, annual-report
 
 ## AI build history
 
-Built with Claude Code. The decisions, the dead ends and what each milestone changed are in [docs/build-log.md](docs/build-log.md). The full conversation (instructions, replies and a one-line summary of every tool call; reasoning, tool outputs, screenshots and personal details removed) is in [docs/ai-build-history/claude-code-session.md](docs/ai-build-history/claude-code-session.md).
+Built with Claude: two Claude chats (research and planning; design and PRD) and a Claude Code session (the build). All three are in [docs/ai-build-history/](docs/ai-build-history/), with an index, and the decisions and dead ends are summarised in [docs/build-log.md](docs/build-log.md). Reasoning, tool outputs and screenshots are removed, and personal details are redacted.
