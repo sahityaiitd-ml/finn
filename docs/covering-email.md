@@ -12,7 +12,7 @@ Please find my submission for the AI Engineer Build Challenge.
 **Links**
 - Prototype (open on a phone): https://finn-ruddy.vercel.app (the free API host sleeps when idle, so the first load after a quiet spell can take about a minute)
 - Repository: https://github.com/sahityaiitd-ml/finn
-- AI build history: attached (Claude Code conversation export), plus `docs/build-log.md` in the repo
+- AI build history: https://github.com/sahityaiitd-ml/finn/blob/main/docs/ai-build-history/claude-code-session.md (the Claude Code conversation, readable and redacted; attached as a file too), plus `docs/build-log.md` for the decisions
 
 **What I built.** FINN, a mobile-first investor agent with one rule: evidence, not verdicts.
 - A **ranked filings digest** for an 18-stock demo portfolio: rules classify the filings, a hard floor keeps material types on screen, routine paperwork collapses into one drawer, and the screen ends in "All caught up".

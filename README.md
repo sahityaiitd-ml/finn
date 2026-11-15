@@ -106,4 +106,4 @@ Event and governance timeline, new-executive bio, thesis tracking, annual-report
 
 ## AI build history
 
-Built with Claude Code. The decisions, the dead ends and what each milestone changed are in [docs/build-log.md](docs/build-log.md). The coding-agent conversation is attached to the covering email ([docs/covering-email.md](docs/covering-email.md)).
+Built with Claude Code. The decisions, the dead ends and what each milestone changed are in [docs/build-log.md](docs/build-log.md). The full conversation (instructions, replies and a one-line summary of every tool call; reasoning, tool outputs, screenshots and personal details removed) is in [docs/ai-build-history/claude-code-session.md](docs/ai-build-history/claude-code-session.md).
