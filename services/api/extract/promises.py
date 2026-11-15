@@ -11,7 +11,8 @@ import re
 from dataclasses import dataclass
 
 STATUSES = ["Delivered", "Missed", "Partly", "Vague", "Not yet due", "No comparable actual"]
-RULES_VERSION = "status-v1"
+RULES_VERSION = "status-v2"
+PARTLY_REL = 0.03  # level targets: a miss within 3% of the threshold is "Partly"
 
 # Tolerances in percentage points. Every guided metric here is higher-is-better, so beating a
 # target is "Delivered". "Partly" means a miss within this band below the threshold.
@@ -90,11 +91,25 @@ def resolve_period(text: str, call_quarter_end: str) -> Period | None:
     if m:
         fy = _fy_num(m.group(1) or m.group(2))
         return Period("FY", fy_end(fy), f"FY{str(fy)[-2:]}")
-    if re.search(r"next (?:fiscal )?year|following year", t):
+    # a bare "Q4", "3Q" or "quarter 1" means the next such quarter after the call
+    m = re.search(r"\bq([1-4])\b|\b([1-4])q\b|\bquarter ([1-4])\b", t)
+    if m:
+        n = int(next(g for g in m.groups() if g))
+        for k in range(1, 5):
+            end = add_months(call_quarter_end, 3 * k)
+            if quarter_label(end).startswith(f"Q{n} "):
+                return Period("Q", end, quarter_label(end))
+    if re.search(r"next (?:fiscal |financial )?year|following year|next fiscal", t):
         fy = in_progress + 1
         return Period("FY", fy_end(fy), f"FY{str(fy)[-2:]}")
-    if re.search(r"full[- ]year|this (?:fiscal )?year|current (?:fiscal )?year|for the year", t):
+    if re.search(
+        r"full[- ]year|(?:this|current) (?:fiscal|financial)(?: year)?|this year|current year|"
+        r"for the year",
+        t,
+    ):
         return Period("FY", fy_end(in_progress), f"FY{str(in_progress)[-2:]}")
+    if re.search(r"onwards?|subsequent|beyond|and later|quarters", t):
+        return None  # more than one period: not a single period to compare
     if re.search(r"next quarter|coming quarter|following quarter", t):
         end = add_months(call_quarter_end, 3)
         return Period("Q", end, quarter_label(end))
@@ -128,6 +143,10 @@ def column_periods(doc_period: str, n: int) -> list[str | None]:
     return (base + extra + [None] * 6)[:n]
 
 
+def _to_crore(unit: str | None) -> float | None:
+    return {"crore": 1.0, "lakh": 0.01, "million": 0.1}.get(unit or "")
+
+
 def build_actuals(results_rows: list[dict]) -> dict[str, dict]:
     """Merge parsed results into {period key: {revenue, ebitda, ebit, pbt, pat, source}}.
 
@@ -145,6 +164,7 @@ def build_actuals(results_rows: list[dict]) -> dict[str, dict]:
             if key is None or not ok[c]:
                 continue
             m, d = p["metrics"], p["derived"]
+            to_cr = _to_crore(p.get("unit"))
             val = {
                 "revenue": m["revenue"]["values"][c],
                 "pbt": m["pbt"]["values"][c],
@@ -154,6 +174,7 @@ def build_actuals(results_rows: list[dict]) -> dict[str, dict]:
             }
             out[key] = {
                 **val,
+                "to_crore": to_cr,  # None when the statement's unit is unclear
                 "sha256": row["doc_sha256"],
                 "page": m["revenue"]["page"],
                 "line": m["revenue"]["line"],
@@ -176,6 +197,12 @@ def lookup_actual(
     cur = actuals.get(period.key)
     if cur is None:
         return None
+    if metric.endswith("_level"):
+        k = {"revenue_level": "revenue", "ebitda_level": "ebitda", "pat_level": "pat"}[metric]
+        if cur.get("to_crore") is None or cur[k] is None:
+            return None  # unit unclear: a 100x slip is worse than "no comparable figure"
+        v = cur[k] * cur["to_crore"]
+        return v, f"₹{v:,.0f} Cr", cur
     if metric in ("ebitda_margin", "ebit_margin"):
         if basis not in ("level", "unspecified"):
             return None
@@ -205,12 +232,13 @@ def lookup_actual(
 
 # ---------- comparing ----------
 def compare(actual: float, direction: str, low: float | None, high: float | None, kind: str) -> str:
-    """Delivered / Partly / Missed for a higher-is-better percentage metric."""
-    partly = PARTLY_PP[kind]
+    """Delivered / Partly / Missed for a higher-is-better metric (percent or INR crore)."""
+    ref = low if low is not None else high
+    partly = abs(ref) * PARTLY_REL if kind == "level" and ref else PARTLY_PP.get(kind, 0.0)
     if direction == "range" and low is not None:
         threshold = low
     elif direction == "point" and low is not None:
-        threshold = low - POINT_PP[kind]
+        threshold = low - (POINT_PP[kind] if kind != "level" else abs(low) * PARTLY_REL)
     elif direction == "min" and low is not None:
         threshold = low
     elif direction == "max" and high is not None:
@@ -223,6 +251,15 @@ def compare(actual: float, direction: str, low: float | None, high: float | None
 
 
 def target_text(direction: str, low: float | None, high: float | None, unit: str) -> str:
+    if unit == "inr_crore":
+        f = lambda x: f"₹{x:,.0f}"  # noqa: E731
+        if direction == "range" and low is not None and high is not None and low != high:
+            return f"{f(low)}–{f(high)} Cr"
+        if direction == "min" and low is not None:
+            return f"{f(low)} Cr or more"
+        if direction == "max" and high is not None:
+            return f"up to {f(high)} Cr"
+        return f"around {f(low)} Cr" if low is not None else ""
     u = "%" if unit == "percent" else ""
     if direction == "range" and low is not None and high is not None and low != high:
         return f"{low:g}–{high:g}{u}"
@@ -253,13 +290,14 @@ def decide_status(
     detail["period"] = period.label
     if horizon is None or period.end > horizon:
         return "Not yet due", {**detail, "reason": f"{period.label} has not been reported yet"}
-    if item["unit"] != "percent":
-        return "No comparable actual", {**detail, "reason": "not a percentage metric"}
+    is_level = item["metric"].endswith("_level") and item["unit"] == "inr_crore"
+    if item["unit"] != "percent" and not is_level:
+        return "No comparable actual", {**detail, "reason": "not a metric the results report"}
     found = lookup_actual(item["metric"], item["basis"], item["qualifier"], period, actuals)
     if found is None:
         return "No comparable actual", {**detail, "reason": "no matching figure in the results"}
     value, text, src = found
-    kind = "margin" if item["metric"].endswith("margin") else "growth"
+    kind = "level" if is_level else ("margin" if item["metric"].endswith("margin") else "growth")
     status = compare(value, item["direction"], item["low"], item["high"], kind)
     return status, {
         **detail,

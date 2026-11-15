@@ -35,6 +35,12 @@ DEMO = Path(__file__).resolve().parents[3] / "data" / "demo"
         ("next year", "2026-06", "FY28", "FY:2028-03"),
         ("second half", "2026-06", "H2 FY27", "H:2027-03"),
         ("H1 FY27", "2026-03", "H1 FY27", "H:2026-09"),
+        ("current fiscal", "2025-12", "FY26", "FY:2026-03"),
+        ("this fiscal", "2026-06", "FY27", "FY:2027-03"),
+        ("next financial year", "2026-06", "FY28", "FY:2028-03"),
+        ("Q4", "2025-12", "Q4 FY26", "Q:2026-03"),
+        ("3Q", "2025-09", "Q3 FY26", "Q:2025-12"),
+        ("Quarter 1", "2026-03", "Q1 FY27", "Q:2026-06"),
     ],
 )
 def test_resolve_period(text, call, label, key):
@@ -42,7 +48,11 @@ def test_resolve_period(text, call, label, key):
     assert p is not None and p.label == label and p.key == key
 
 
-@pytest.mark.parametrize("text", ["", "going forward", "next few quarters", "this quarter", "soon"])
+@pytest.mark.parametrize(
+    "text",
+    ["", "going forward", "next few quarters", "this quarter", "soon", "coming quarters",
+     "next quarter onwards", "quarter-on-quarter", "next 12 months"],
+)  # fmt: skip
 def test_ambiguous_period_is_none(text):
     assert resolve_period(text, "2026-06") is None
 
@@ -307,3 +317,49 @@ def test_double_digit_is_a_number_management_gave(tcs_pages):
     )  # fmt: skip
     it = out.items[0]
     assert it.direction == "min" and it.low == 10.0 and it.unit == "percent"
+
+
+# ---------- level targets in INR crore ----------
+def test_detect_unit_only_when_clear():
+    from extract.results import detect_unit
+
+    assert detect_unit("Statement of results (₹ in crore)\nRevenue 1 2 3") == "crore"
+    assert detect_unit("(Rs. in Lakhs) Revenue") == "lakh"
+    assert detect_unit("(Rs. in Million) Revenue") == "million"
+    assert detect_unit("Standalone Statement of Profit and Loss\nCrore\nSix months") == "crore"
+    assert detect_unit("Revenue 1 2 3") is None
+    assert detect_unit("(Rs. in crore) and also (Rs. in lakhs)") is None  # conflicting: no guess
+
+
+def level_row(unit="crore"):
+    r = parsed_row()
+    r["parsed"]["unit"] = unit
+    return r
+
+
+def test_level_target_is_compared_in_crore_with_unit_conversion():
+    a = build_actuals([level_row("crore")])
+    s, d = decide_status(
+        item(metric="revenue_level", unit="inr_crore", low=100, high=140, period="Q2 FY27"),
+        "2026-06", a, "2026-09",
+    )  # fmt: skip
+    assert s == "Delivered" and d["reported"] == "₹120 Cr" and d["target"] == "₹100–₹140 Cr"
+    a = build_actuals([level_row("lakh")])  # 120 lakh = 1.2 crore
+    s, d = decide_status(
+        item(metric="revenue_level", unit="inr_crore", low=100, high=140, period="Q2 FY27"),
+        "2026-06", a, "2026-09",
+    )  # fmt: skip
+    assert s == "Missed" and d["reported"] == "₹1 Cr"
+    a = build_actuals([level_row(None)])  # unit unclear -> never compared
+    s, _ = decide_status(
+        item(metric="revenue_level", unit="inr_crore", low=100, high=140, period="Q2 FY27"),
+        "2026-06", a, "2026-09",
+    )  # fmt: skip
+    assert s == "No comparable actual"
+
+
+@pytest.mark.parametrize(
+    "actual,want", [(5600, "Delivered"), (6100, "Delivered"), (5400, "Partly"), (4000, "Missed")]
+)
+def test_level_compare_uses_a_3_percent_band(actual, want):
+    assert compare(actual, "range", 5500, 6000, "level") == want

@@ -134,3 +134,15 @@ def test_restatement_and_basis_switch_flags():
     }
     assert restatement_flags(cur, prior) == ["basis_switch", "restated_periods"]
     assert restatement_flags(cur, None) == []
+
+
+def test_dixon_squashed_spaces_and_blank_cells():
+    """The text layer reads 'Revenuefrom operations' and 'Profitbefore tax'; a blank finance-cost
+    cell must fail only the full-year column, never be guessed."""
+    r = parsed("DIXON")
+    assert r.status == "ok" and r.basis == "consolidated" and r.unit == "crore"
+    assert r.column_ok == [True, True, True, True, True, False]
+    assert r.metrics["revenue"].values[0] == 21793.64
+    assert r.metrics["pat"].values[0] == 410.87
+    assert r.derived["ebitda"][0] == round(532.35 + 25.95 + 110.06 - 68.73, 4)
+    assert r.derived["ebitda"][5] is None

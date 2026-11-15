@@ -31,7 +31,8 @@ MAX_CALLS = 4  # the last four quarters
 METRIC_LABELS = {
     "revenue_growth": "Revenue growth", "ebitda_margin": "EBITDA margin",
     "ebitda_growth": "EBITDA growth", "ebit_margin": "EBIT margin (derived)",
-    "pat_growth": "PAT growth", "pbt_growth": "PBT growth", "capex": "Capex",
+    "pat_growth": "PAT growth", "revenue_level": "Revenue", "ebitda_level": "EBITDA",
+    "pat_level": "PAT", "pbt_growth": "PBT growth", "capex": "Capex",
     "volume_growth": "Volume growth", "order_book": "Order book", "other": "Other",
 }  # fmt: skip
 ORDER = {"Missed": 0, "Partly": 1, "Delivered": 2, "Not yet due": 3, "No comparable actual": 4,

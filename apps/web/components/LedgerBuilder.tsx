@@ -6,6 +6,7 @@ import { API_URL, type Job, type JobProgress } from "@/lib/api";
 import { Card, Check, Pill } from "./ui";
 
 const POLL_MS = 2500;
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 function StatusIcon({ s }: { s: string }) {
   if (s === "done")
@@ -84,8 +85,8 @@ export function LedgerBuilder({
       <Card>
         <p className="text-[16px] font-medium text-ink">Transcripts not available</p>
         <p className="text-[13px] text-ink-2">
-          {job?.result?.reason ?? "The source blocks automated downloads."} Nothing is guessed. You
-          can open them yourself:
+          {cap(job?.result?.reason ?? "The source blocks automated downloads")}. Nothing is guessed.
+          You can open them yourself:
         </p>
         {(job?.result?.links ?? []).map((l) => (
           <a

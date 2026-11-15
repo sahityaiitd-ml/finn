@@ -14,12 +14,13 @@ from extract.llm import Completer
 from extract.quotes import locate, numbers_in
 
 BIG_MODEL = "openai/gpt-oss-120b"
-PROMPT_VERSION = "guidance-v1"
+PROMPT_VERSION = "guidance-v2"
 PAGES_PER_CALL = 6
 
 METRICS = [
     "revenue_growth", "ebitda_margin", "ebitda_growth", "ebit_margin", "pat_growth",
-    "pbt_growth", "capex", "volume_growth", "order_book", "other",
+    "pbt_growth", "revenue_level", "ebitda_level", "pat_level", "capex", "volume_growth",
+    "order_book", "other",
 ]  # fmt: skip
 BASES = ["yoy", "qoq", "cagr", "level", "unspecified"]
 QUALIFIERS = ["none", "constant_currency", "organic", "volume", "segment", "other"]

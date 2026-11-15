@@ -21,13 +21,13 @@ LABELS: dict[str, re.Pattern] = {
     "finance_cost": re.compile(r"\bfinance costs?\b", re.I),
     "dep": re.compile(r"\bdepreciation\b", re.I),
     "total_expenses": re.compile(r"\btotal expenses\b", re.I),
-    "pbt_pre_exc": re.compile(r"\bprofit\W.{0,12}before exceptional items\b", re.I),
-    "pbt": re.compile(r"\bprofit\W.{0,12}before tax\b", re.I),
+    "pbt_pre_exc": re.compile(r"profit\W*.{0,12}?before exceptional items?", re.I),
+    "pbt": re.compile(r"profit\W*.{0,12}?before tax\b", re.I),
     "total_tax": re.compile(r"\btotal tax expenses?\b", re.I),
     "current_tax": re.compile(r"^\W*current tax\b", re.I),
     "deferred_tax": re.compile(r"^\W*deferred tax\b", re.I),
     "pat": re.compile(
-        r"\bprofit\b.{0,14}?(?:for the (?:period|year|quarter)|after tax)\b(?!.*attributable)", re.I
+        r"profit.{0,14}?(?:for the (?:period|year|quarter)|after tax)(?!.*attributable)", re.I
     ),
     "jv_share": re.compile(
         r"^\W*(?:[ivx\d]+\W+)?share of (?:profit|proflt).{0,20}(?:joint|ioint|associate)", re.I
@@ -37,6 +37,13 @@ LABELS: dict[str, re.Pattern] = {
 # year-to-date, year-to-date last year, last full year. Each column is checked on its own.
 NCOLS = 6
 
+
+def _loose(p: re.Pattern) -> re.Pattern:
+    """PDF text layers sometimes drop spaces ('Profitbefore tax'): let a space match nothing."""
+    return re.compile(re.sub(r"(?<!\\) ", r"\\s*", p.pattern), p.flags)
+
+
+LABELS = {k: _loose(v) for k, v in LABELS.items()}
 BANK_HINT = re.compile(r"interest earned|net interest income|\binterest expended\b", re.I)
 
 
@@ -101,6 +108,7 @@ class ParsedResults:
     column_ok: list[bool] = field(default_factory=lambda: [False, False, False])
     flags: list[str] = field(default_factory=list)
     reason: str = ""
+    unit: str | None = None
 
 
 def _lines(pages: list[str], first: int) -> list[Line]:
@@ -121,6 +129,26 @@ def find_statement_pages(pages: list[str]) -> list[int]:
         if re.search(r"finance costs?", t, re.I) and re.search(r"total (income|expenses)", t, re.I):
             hits.append(i + 1)
     return hits
+
+
+UNIT_TO_CRORE = {"crore": 1.0, "lakh": 0.01, "million": 0.1}
+_UNIT = re.compile(
+    r"in\s+(crores?|lakhs?|lacs?|millions?)|\b(crores?|lakhs?|millions?)\b\)|"
+    r"^\W{0,4}(?:rs\.?|inr)?\s*(crores?|lakhs?|millions?)\W{0,3}$",
+    re.I | re.M,
+)
+
+
+def detect_unit(page_text: str) -> str | None:
+    """Unit of the figures on a statement page: crore, lakh or million. None if unclear."""
+    head = page_text[:1800]
+    found = {
+        (m.group(1) or m.group(2) or m.group(3)).lower().rstrip("s").replace("lac", "lakh")
+        for m in _UNIT.finditer(head)
+    }
+    if len(found) != 1:
+        return None  # none, or conflicting: never guess a unit
+    return found.pop() if next(iter(found)) in UNIT_TO_CRORE else None
 
 
 def detect_basis(page_text: str) -> str | None:
@@ -154,7 +182,7 @@ def _metric(lines: list[Line], key: str, after: int = -1):
 def parse_statement(pages: list[str], page: int) -> ParsedResults:
     lines = _lines(pages, page)
     basis = detect_basis(pages[page - 1])
-    res = ParsedResults(status="see_pdf", basis=basis, page=page)
+    res = ParsedResults(status="see_pdf", basis=basis, page=page, unit=detect_unit(pages[page - 1]))
     if BANK_HINT.search(pages[page - 1]) and not re.search(
         r"finance costs?", pages[page - 1], re.I
     ):
@@ -319,6 +347,7 @@ def to_dict(r: ParsedResults) -> dict:
         "basis": r.basis,
         "page": r.page,
         "reason": r.reason,
+        "unit": r.unit,
         "column_ok": r.column_ok,
         "flags": r.flags,
         "checks": [{"name": c.name, "ok": c.ok} for c in r.checks],
