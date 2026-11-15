@@ -89,3 +89,20 @@ def parse_annual_reports(html: str) -> list[DocLink]:
         if re.fullmatch(r"Annual Report \d{4}", text):
             out.append(DocLink(text, "annual_report", a["href"]))
     return out
+
+
+QUARTER_SRC_RE = re.compile(r"/company/source/quarter/(\d+)/(\d{1,2})/(\d{4})/")
+
+
+def parse_results_pdf_links(html: str) -> dict[str, str]:
+    """Quarters table 'Raw PDF' row: {'2026-09': screener redirect URL}."""
+    soup = BeautifulSoup(html, "lxml")
+    out: dict[str, str] = {}
+    for a in soup.select("#quarters a[href*='/source/quarter/']"):
+        m = QUARTER_SRC_RE.search(a["href"])
+        if m:
+            href = a["href"]
+            out[f"{m.group(3)}-{int(m.group(2)):02d}"] = (
+                href if href.startswith("http") else "https://www.screener.in" + href
+            )
+    return out
