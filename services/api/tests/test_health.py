@@ -22,7 +22,12 @@ def test_jobs_accept_secret(monkeypatch):
     import jobs.fetch_filings
 
     monkeypatch.setattr(app.db, "get_client", lambda: object())
+    import jobs.classify_filings
+    import jobs.eod
+
+    monkeypatch.setattr(jobs.eod, "run", lambda db: {"alerts": []})
     monkeypatch.setattr(jobs.fetch_filings, "run", lambda db: {"companies": 0})
+    monkeypatch.setattr(jobs.classify_filings, "run", lambda db: {"classified": 0})
     h = {"x-job-secret": settings.job_secret}
     assert client.post("/jobs/eod", headers=h).status_code == 200
     assert client.post("/jobs/fetch-filings", headers=h).status_code == 200

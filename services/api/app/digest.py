@@ -17,7 +17,13 @@ def display_headline(h: str) -> str:
     return _TRAIL_DATE.sub("", h)
 
 
-def build_digest(rows: list[dict], names: dict[str, str], now: datetime, window: str) -> dict:
+def build_digest(
+    rows: list[dict],
+    names: dict[str, str],
+    now: datetime,
+    window: str,
+    extra: list[dict] | None = None,
+) -> dict:
     hours = WINDOWS.get(window, 24)
     since = now - timedelta(hours=hours)
     main: list[dict] = []
@@ -49,6 +55,13 @@ def build_digest(rows: list[dict], names: dict[str, str], now: datetime, window:
         key=lambda i: (-i["materiality"], -datetime.fromisoformat(i["published_at"]).timestamp())
     )
     routine.sort(key=lambda i: -datetime.fromisoformat(i["published_at"]).timestamp())
+    for it in extra or []:  # end-of-day alerts: always shown, never routine
+        ts = datetime.fromisoformat(it["published_at"])
+        if since <= ts <= now:
+            main.append(it)
+    main.sort(
+        key=lambda i: (-i["materiality"], -datetime.fromisoformat(i["published_at"]).timestamp())
+    )
     open_main = [i for i in main if not i["reviewed"]]
     return {
         "window": window if window in WINDOWS else "24h",
