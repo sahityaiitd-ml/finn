@@ -148,3 +148,49 @@ export function Chevron({ open }: { open?: boolean }) {
     </svg>
   );
 }
+
+export function Switch({
+  on,
+  onChange,
+  label,
+}: {
+  on: boolean;
+  onChange?: (v: boolean) => void;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={on}
+      aria-label={label}
+      disabled={!onChange}
+      onClick={onChange ? () => onChange(!on) : undefined}
+      className={`relative h-7 w-[46px] shrink-0 rounded-full transition-colors ${on ? "bg-sage-600" : "bg-track"} ${onChange ? "" : "opacity-60"}`}
+    >
+      <span
+        className={`absolute top-[3px] size-[22px] rounded-full bg-surface shadow-sm transition-all ${on ? "left-[21px]" : "left-[3px]"}`}
+      />
+    </button>
+  );
+}
+
+export function RowLink({ href, title, sub }: { href?: string; title: string; sub: string }) {
+  const body = (
+    <>
+      <div className="min-w-px flex-1">
+        <p className="text-[15px] text-ink">{title}</p>
+        <p className="text-[12px] text-muted">{sub}</p>
+      </div>
+      {href && <Chevron />}
+    </>
+  );
+  const cls = "flex min-h-[56px] items-center gap-3 border-b border-hairline last:border-b-0";
+  return href ? (
+    <Link href={href} className={cls}>
+      {body}
+    </Link>
+  ) : (
+    <div className={cls}>{body}</div>
+  );
+}

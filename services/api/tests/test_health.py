@@ -31,3 +31,16 @@ def test_jobs_accept_secret(monkeypatch):
     h = {"x-job-secret": settings.job_secret}
     assert client.post("/jobs/eod", headers=h).status_code == 200
     assert client.post("/jobs/fetch-filings", headers=h).status_code == 200
+
+
+def test_cors_allows_the_methods_the_web_app_uses():
+    """Settings are saved with PUT/DELETE from the browser; a missing method fails silently."""
+    for method in ("PUT", "DELETE", "POST", "GET"):
+        r = client.options(
+            "/settings",
+            headers={
+                "Origin": "http://localhost:3000",
+                "Access-Control-Request-Method": method,
+            },
+        )
+        assert r.status_code == 200, method

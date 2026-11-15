@@ -29,3 +29,56 @@ def test_alerts_join_the_digest_within_the_window_and_can_be_reviewed():
     assert build_digest([], {}, now, "24h", [done])["caught_up"] is True
     old = datetime(2026, 11, 20, 12, 0, tzinfo=UTC)
     assert build_digest([], {}, old, "24h", [it])["counts"]["main"] == 0
+
+
+def test_the_digest_endpoint_includes_alerts():
+    """Guards the wiring, not just the pure functions: /digest must merge stored alerts."""
+    from fastapi.testclient import TestClient
+
+    import app.db
+    from app.main import app as fastapi_app
+
+    class Q:
+        def __init__(self, table):
+            self.t = table
+
+        def select(self, *_):
+            return self
+
+        def eq(self, *_):
+            return self
+
+        def in_(self, *_):
+            return self
+
+        def gte(self, *_):
+            return self
+
+        def order(self, *_):
+            return self
+
+        def limit(self, *_):
+            return self
+
+        def execute(self):
+            data = {
+                "portfolios": [{"id": "p"}],
+                "portfolio_holdings": [{"symbol": "TCS"}],
+                "companies": [{"symbol": "TCS", "name": "TCS Ltd"}],
+                "filings": [],
+                "alerts": [alert()],
+            }[self.t]
+            return type("R", (), {"data": data})
+
+    class DB:
+        def table(self, t):
+            return Q(t)
+
+    orig = app.db.get_client
+    app.db.get_client = lambda: DB()
+    try:
+        r = TestClient(fastapi_app).get("/digest?window=24h&as_of=2026-11-13T20:00:00%2B00:00")
+    finally:
+        app.db.get_client = orig
+    items = [i for i in r.json()["main"] if i["category"] == "eod_alert"]
+    assert items and items[0]["name"] == "TCS Ltd" and items[0]["alert"]["ratio"] == 4.2

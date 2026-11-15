@@ -35,3 +35,12 @@
 - **Honest outcome:** 76 → ~80 promises across TCS, Dabur, Tata Steel, Dixon; none scoreable as Delivered/Missed/Partly. Most guidance is segment, volume, per-tonne, capex or FY27 (not yet reported); TCS says it gives no guidance. The ledger shows this rather than forcing a score.
 - **Results parser widened** to six columns (quarter, preceding, year-ago, half/nine-month, same last year, full year) with unit detection (crore/lakh/million; unclear → never compared), tolerance for squashed spaces ("Profitbefore tax"), and Dixon as a sixth filing. Dixon's scanned Mar/Jun 2026 statements fail the identity checks and show "See PDF" (Gemini vision on scanned pages is a next step).
 - **Any ticker:** discovery works from screener.in; BSE blocks the PDF download (403), so tickers without stored transcripts show the links and "nothing is guessed" (tested with Titan).
+
+## 2026-11-15 — M5 alerts, alert rules, profile
+- **EOD job:** one batched yfinance call for the 18 holdings, 1,134 price rows stored; alert rules (volume vs the 20-session average, price move), per-stock overrides, 0 = rule off. At the defaults the latest session (13 Nov) had no alerts, and none were invented.
+- **Cause label:** exactly two strings; a filing is related only if material, for that stock, and filed between the previous close and this one. Routine filings never count.
+- **Screens from Figma 05/09:** Alert rules (default thresholds with switches, overrides, dry run, cause-label and never-collapsed explainers), Profile (coverage, preferences), a digest-window picker that Today now defaults to, and the alert card on Today (volume ×, price move in plain ink, cause label).
+- **Cron:** `fetch-filings` now also classifies (chained), and `eod` runs at 16:30 IST on market days.
+- **Bugs the browser caught, not the unit tests:** (1) the API's CORS allowed only GET/POST, so PUT/DELETE settings silently failed; (2) my digest edit had not applied (a formatter had reflowed the block), so alerts never reached Today; (3) a read-only switch carried a click handler, which a server-rendered page cannot do and `next build` does not detect. Each now has a regression test or an endpoint-level test.
+- **Data pitfall:** the API returns at most 1,000 rows per request; price history is now read in pages. Before the fix the dry run silently dropped the newest 134 rows.
+- **Demo check:** with temporary sensitive thresholds (1.3× / 1.5%) the real data produced four alerts, which rendered correctly on Today; they were deleted and the defaults restored.

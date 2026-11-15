@@ -9,7 +9,7 @@ app = FastAPI(title="FINN API", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[o.strip() for o in settings.cors_origins.split(",") if o.strip()],
-    allow_methods=["GET", "POST"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
 )
 
@@ -133,7 +133,16 @@ def digest(portfolio_id: str | None = None, window: str = "24h", as_of: str | No
         .execute()
         .data
     )
-    return {"portfolio_id": pid, **build_digest(rows, names, now, window)}
+    from app.alerts_view import alert_item
+
+    alerts = db.table("alerts").select("*").in_("symbol", syms).execute().data
+    fids = [i for a in alerts for i in a["detail"].get("filing_ids", [])]
+    fmap: dict[str, dict] = {}
+    if fids:
+        for f in db.table("filings").select("id,headline,url").in_("id", fids).execute().data:
+            fmap[f["id"]] = f
+    extra = [alert_item(a, names, fmap) for a in alerts]
+    return {"portfolio_id": pid, **build_digest(rows, names, now, window, extra)}
 
 
 @app.post("/filings/{filing_id}/reviewed")

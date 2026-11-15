@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { API_URL, type Digest, type DigestItem } from "@/lib/api";
-import { categoryLabel, fmtDayIST, fmtTimeIST } from "@/lib/format";
+import { type Digest, type DigestItem, send } from "@/lib/api";
+import { categoryLabel, fmtDayIST, fmtNum, fmtPct, fmtTimeIST } from "@/lib/format";
 import { Check, Chevron, ExternalSourceLink, Pill } from "./ui";
 
 function ReviewButton({ onClick }: { onClick: () => void }) {
@@ -18,7 +18,59 @@ function ReviewButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-function Card({ it, onReview }: { it: DigestItem; onReview: (id: string) => void }) {
+function AlertCard({ it, onReview }: { it: DigestItem; onReview: (it: DigestItem) => void }) {
+  const a = it.alert!;
+  return (
+    <article className="flex flex-col gap-[10px] rounded-[16px] bg-surface p-4 shadow-card">
+      <div className="flex items-center gap-2">
+        <Pill label="End-of-day alert" />
+        <span className="flex-1" />
+        <span className="text-[12px] text-muted">{fmtDayIST(it.published_at)}</span>
+      </div>
+      <h3 className="text-[18px] font-medium text-ink">{it.name}</h3>
+      <div className="flex">
+        <div className="flex min-w-px flex-1 flex-col gap-px pr-2">
+          <span className="text-[12px] text-muted">Volume</span>
+          <span className="text-[17px] font-medium text-ink">{fmtNum(a.ratio)}×</span>
+          <span className="text-[12px] text-muted">
+            {a.vol_mult > 0 ? `rule ${a.vol_mult}×` : "rule off"}
+          </span>
+        </div>
+        <span className="w-px self-stretch bg-hairline" />
+        <div className="flex min-w-px flex-1 flex-col gap-px pl-3 pr-2">
+          <span className="text-[12px] text-muted">Price</span>
+          {/* a price move is never coloured: plain ink, sign only */}
+          <span className="text-[17px] font-medium text-ink">{fmtPct(a.pct)}</span>
+          <span className="text-[12px] text-muted">on the day</span>
+        </div>
+      </div>
+      <p className="flex items-center gap-2 text-[13px] font-medium text-ink">
+        <span
+          aria-hidden
+          className="grid size-4 place-items-center rounded-full border border-ink-2 text-[10px] text-ink-2"
+        >
+          i
+        </span>
+        {a.cause_label}
+      </p>
+      {a.filings.slice(0, 2).map((f) => (
+        <ExternalSourceLink key={f.url} href={f.url} label="Source · BSE filing" />
+      ))}
+      <div className="flex items-center gap-2 pt-[2px]">
+        <Link
+          href={`/companies/${it.symbol}/filings`}
+          className="inline-flex min-h-[44px] items-center text-[14px] font-medium text-sage-text"
+        >
+          Dig in →
+        </Link>
+        <span className="flex-1" />
+        <ReviewButton onClick={() => onReview(it)} />
+      </div>
+    </article>
+  );
+}
+
+function Card({ it, onReview }: { it: DigestItem; onReview: (it: DigestItem) => void }) {
   const material = it.never_collapse && it.category !== "results";
   const digHref =
     it.category === "results"
@@ -46,7 +98,7 @@ function Card({ it, onReview }: { it: DigestItem; onReview: (id: string) => void
           {digLabel} →
         </Link>
         <span className="flex-1" />
-        <ReviewButton onClick={() => onReview(it.id)} />
+        <ReviewButton onClick={() => onReview(it)} />
       </div>
     </article>
   );
@@ -66,12 +118,11 @@ export function TodayFeed({ digest, w, now }: { digest: Digest; w: string; now: 
   const done = items.filter((i) => i.reviewed);
   const caughtUp = todo.length === 0;
 
-  async function review(id: string) {
+  async function review(it: DigestItem) {
+    const id = it.id;
     setItems((xs) => xs.map((x) => (x.id === id ? { ...x, reviewed: true } : x)));
-    try {
-      const r = await fetch(`${API_URL}/filings/${id}/reviewed`, { method: "POST" });
-      if (!r.ok) throw new Error();
-    } catch {
+    const path = it.alert ? `/alerts/${id}/reviewed` : `/filings/${id}/reviewed`;
+    if (!(await send(path, "POST"))) {
       setItems((xs) => xs.map((x) => (x.id === id ? { ...x, reviewed: false } : x)));
     }
   }
@@ -138,9 +189,13 @@ export function TodayFeed({ digest, w, now }: { digest: Digest; w: string; now: 
           </div>
         )}
 
-        {todo.map((it) => (
-          <Card key={it.id} it={it} onReview={review} />
-        ))}
+        {todo.map((it) =>
+          it.alert ? (
+            <AlertCard key={it.id} it={it} onReview={review} />
+          ) : (
+            <Card key={it.id} it={it} onReview={review} />
+          ),
+        )}
 
         {done.length > 0 && (
           <section className="rounded-[16px] bg-surface p-4 shadow-card">
@@ -152,7 +207,9 @@ export function TodayFeed({ digest, w, now }: { digest: Digest; w: string; now: 
                 </span>
                 <div className="min-w-px flex-1">
                   <p className="text-[15px] text-ink">{it.name}</p>
-                  <p className="text-[12px] text-muted">{it.summary ?? it.headline}</p>
+                  <p className="text-[12px] text-muted">
+                    {it.alert ? "End-of-day alert" : (it.summary ?? it.headline)}
+                  </p>
                 </div>
                 <span className="text-[12px] text-muted">{fmtTimeIST(it.published_at)}</span>
               </div>
