@@ -1,6 +1,6 @@
 import secrets
 
-from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi import BackgroundTasks, Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
@@ -56,7 +56,7 @@ def latest_results(symbol: str) -> dict:
 
 
 @app.get("/docs/{sha256}/page/{n}")
-def doc_page(sha256: str, n: int) -> dict:
+def doc_page(sha256: str, n: int, q: str | None = None) -> dict:
     from app.db import get_client
 
     db = get_client()
@@ -65,7 +65,14 @@ def doc_page(sha256: str, n: int) -> dict:
     if not doc or not page:
         raise HTTPException(status_code=404, detail="page not found")
     d = doc[0]
+    hl = None
+    if q:
+        from extract.quotes import locate
+
+        h = locate(q, page[0]["text"])
+        hl = {"start": h.start, "end": h.end, "score": h.score} if h else None
     return {
+        "highlight": hl,
         "sha256": sha256,
         "page": n,
         "n_pages": d["n_pages"],
@@ -138,3 +145,100 @@ def classify_filings_job() -> dict:
     from jobs.classify_filings import run
 
     return {"status": "done", **run(get_client())}
+
+
+def _run_promise_job(job_id: str, symbol: str) -> None:
+    from datetime import UTC, datetime
+
+    from app.db import get_client
+    from jobs.promises import run
+
+    db = get_client()
+    db.table("jobs").update({"status": "running"}).eq("id", job_id).execute()
+    try:
+
+        def progress(p):
+            db.table("jobs").update({"result": {"state": "running", "progress": p}}).eq(
+                "id", job_id
+            ).execute()
+
+        result = run(db, symbol, on_progress=progress)
+        status = "done"
+        err = None
+    except Exception as e:  # report, never crash the worker
+        result, status, err = None, "failed", str(e)[:300]
+    db.table("jobs").update(
+        {
+            "status": status,
+            "result": result,
+            "error": err,
+            "updated_at": datetime.now(UTC).isoformat(),
+        }
+    ).eq("id", job_id).execute()
+
+
+@app.post("/promises/{symbol}")
+def start_promises(symbol: str, background: BackgroundTasks, refresh: bool = False) -> dict:
+    """Start (or reuse) the ledger job. Same inputs + prompt version means a cached answer."""
+    from app.db import get_client
+    from jobs.promises import ledger_key, results_rows, transcript_docs
+
+    db, sym = get_client(), symbol.upper()
+    key = ledger_key(sym, transcript_docs(db, sym), results_rows(db, sym))
+    jobs = db.table("jobs").select("*").eq("kind", "promises").eq("key", key).execute().data
+    live = [j for j in jobs if j["status"] in ("queued", "running")]
+    done = [j for j in jobs if j["status"] == "done" and (j["result"] or {}).get("state") == "done"]
+    if live:
+        return {"job_id": live[0]["id"], "status": live[0]["status"], "cached": False}
+    if done and not refresh:
+        return {"job_id": done[0]["id"], "status": "done", "cached": True}
+    job = (
+        db.table("jobs")
+        .insert({"kind": "promises", "key": key, "status": "queued"})
+        .execute()
+        .data[0]
+    )
+    background.add_task(_run_promise_job, job["id"], sym)
+    return {"job_id": job["id"], "status": "queued", "cached": False}
+
+
+@app.get("/jobs/{job_id}")
+def job_status(job_id: str) -> dict:
+    from app.db import get_client
+
+    rows = get_client().table("jobs").select("*").eq("id", job_id).execute().data
+    if not rows:
+        raise HTTPException(status_code=404, detail="job not found")
+    j = rows[0]
+    return {
+        "id": j["id"],
+        "kind": j["kind"],
+        "status": j["status"],
+        "result": j["result"],
+        "error": j["error"],
+    }
+
+
+@app.get("/promises/{symbol}")
+def get_promises(symbol: str) -> dict:
+    from app.db import get_client
+    from jobs.promises import ledger, results_rows
+
+    db, sym = get_client(), symbol.upper()
+    comp = db.table("companies").select("name").eq("symbol", sym).execute().data
+    rows = ledger(db, sym)
+    counts: dict[str, int] = {}
+    for r in rows:
+        counts[r["status"]] = counts.get(r["status"], 0) + 1
+    from extract.promises import horizon_end
+    from jobs.promises import transcript_docs
+
+    calls = [{"period": d["period"], "pages": d["n_pages"]} for d in transcript_docs(db, sym)]
+    return {
+        "symbol": sym,
+        "name": comp[0]["name"] if comp else sym,
+        "calls": calls,
+        "rows": rows,
+        "counts": counts,
+        "reported_through": horizon_end(results_rows(db, sym)),
+    }

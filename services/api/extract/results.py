@@ -33,6 +33,10 @@ LABELS: dict[str, re.Pattern] = {
         r"^\W*(?:[ivx\d]+\W+)?share of (?:profit|proflt).{0,20}(?:joint|ioint|associate)", re.I
     ),
 }
+# Columns: this quarter, preceding quarter, same quarter last year, then (in Q2/Q3 filings)
+# year-to-date, year-to-date last year, last full year. Each column is checked on its own.
+NCOLS = 6
+
 BANK_HINT = re.compile(r"interest earned|net interest income|\binterest expended\b", re.I)
 
 
@@ -144,7 +148,7 @@ def _metric(lines: list[Line], key: str, after: int = -1):
     if not f:
         return None, None
     i, ln = f
-    return i, Metric([*ln.values[:3]], ln.page, ln.text.strip())
+    return i, Metric([*ln.values[:NCOLS]], ln.page, ln.text.strip())
 
 
 def parse_statement(pages: list[str], page: int) -> ParsedResults:
@@ -192,7 +196,7 @@ def parse_statement(pages: list[str], page: int) -> ParsedResults:
             if i < pre_i and LABELS["jv_share"].search(ln.label or ln.text) and len(ln.values2) >= 2
         ]  # fmt: skip
         if j:
-            v = [*j[-1].values2[:3]] + [None] * (3 - len(j[-1].values2[:3]))
+            v = [*j[-1].values2[:NCOLS]] + [None] * (NCOLS - len(j[-1].values2[:NCOLS]))
             jv_pre = Metric(v, j[-1].page, j[-1].text.strip())
     res.metrics = m
 
@@ -222,8 +226,22 @@ def parse_statement(pages: list[str], page: int) -> ParsedResults:
     def tol(*vals: float) -> float:
         return 1.0 if all(float(v).is_integer() for v in vals) else 0.15
 
+    core = [m[k] for k in need if k in m] + [m["pat"]]
+    if pre:
+        core.append(pre)
+    tax_lines = [m[k] for k in ("total_tax", "current_tax", "deferred_tax") if k in m]
+
+    def avail(c: int) -> bool:
+        has = all(len(x.values) > c for x in core) and all(len(x.values) > c for x in tax_lines)
+        return has and (jv_pre is None or jv_pre.values[c] is not None or c > 2)
+
     c1, c2, c3 = [], [], []
-    for c in range(3):
+    for c in range(NCOLS):
+        if not avail(c):
+            c1.append(False)
+            c2.append(False)
+            c3.append(False)
+            continue
         a, b = col("revenue", c), col("other_income", c)
         t = col("total_income", c)
         c1.append(abs(a + b - t) <= tol(a, b, t))
@@ -231,8 +249,11 @@ def parse_statement(pages: list[str], page: int) -> ParsedResults:
         base = t - te
         if pre:
             p = col("pbt_pre_exc", c)
-            jv = jv_pre.values[c] if jv_pre else 0.0
-            c2.append(jv is not None and abs(base + jv - p) <= tol(t, te, p, jv))
+            jv = jv_pre.values[c] if jv_pre and jv_pre.values[c] is not None else 0.0
+            if jv_pre is not None and jv_pre.values[c] is None:
+                c2.append(False)
+            else:
+                c2.append(abs(base + jv - p) <= tol(t, te, p, jv))
         else:
             p = col("pbt", c)
             c2.append(abs(base - p) <= tol(t, te, p))
@@ -244,25 +265,29 @@ def parse_statement(pages: list[str], page: int) -> ParsedResults:
         Check("total income − total expenses = profit before tax (pre-exceptional)", c2),
         Check("profit before tax − tax = profit after tax", c3),
     ]
-    res.column_ok = [all(ch.ok[c] for ch in res.checks) for c in range(3)]
+    res.column_ok = [all(ch.ok[c] for ch in res.checks) for c in range(NCOLS)]
+    res.column_ok = [bool(x) for x in res.column_ok]
 
-    exc, ebitda = [], []
-    for c in range(3):
+    exc, ebitda, ebit = [], [], []
+    for c in range(NCOLS):
+        if not res.column_ok[c]:
+            exc.append(None)
+            ebitda.append(None)
+            ebit.append(None)
+            continue
         p_pre = col("pbt_pre_exc", c) if pre else col("pbt", c)
         exc.append(round(col("pbt", c) - p_pre, 4) if pre else 0.0)
-        ebitda.append(
-            round(p_pre + col("finance_cost", c) + col("dep", c) - col("other_income", c), 4)
-            if res.column_ok[c]
-            else None
-        )
-    res.derived = {"ebitda": ebitda, "exceptional": exc}
+        e = round(p_pre + col("finance_cost", c) + col("dep", c) - col("other_income", c), 4)
+        ebitda.append(e)
+        ebit.append(round(e - col("dep", c), 4))  # EBIT = EBITDA - D&A
+    res.derived = {"ebitda": ebitda, "ebit": ebit, "exceptional": exc}
 
     if res.column_ok[0]:
         res.status = "ok"
         oi, p0 = col("other_income", 0), col("pbt", 0)
         if p0 > 0 and oi > 0.20 * p0:
             res.flags.append("other_income_gt_20pct_pbt")
-        if exc[0] != 0:
+        if exc[0]:
             res.flags.append("exceptional_item")
     else:
         res.reason = "identity check failed for this quarter"
