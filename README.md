@@ -6,6 +6,8 @@
 
 **https://finn-ruddy.vercel.app** — open it on a phone and "Add to Home Screen".
 
+**Android app (APK):** https://github.com/sahityaiitd-ml/finn/releases/download/android-latest/finn.apk — open the link on an Android phone, tap the file, and allow "install unknown apps" once ([install notes](apps/android/README.md)). It opens the same live app inside a native shell. **iPhone:** open the web link, then Share → Add to Home Screen.
+
 The API runs on a free Render instance that sleeps when idle: the **first request after a quiet spell can take about a minute** while it wakes. Give it a moment; later requests are fast.
 
 ## Try it in three steps
