@@ -68,7 +68,14 @@ def doc_page(sha256: str, n: int, q: str | None = None) -> dict:
 
     db = get_client()
     doc = db.table("documents").select("*").eq("sha256", sha256).execute().data
-    page = db.table("doc_pages").select("text").eq("sha256", sha256).eq("page", n).execute().data
+    page = (
+        db.table("doc_pages")
+        .select("text,method")
+        .eq("sha256", sha256)
+        .eq("page", n)
+        .execute()
+        .data
+    )
     if not doc or not page:
         raise HTTPException(status_code=404, detail="page not found")
     d = doc[0]
@@ -78,7 +85,17 @@ def doc_page(sha256: str, n: int, q: str | None = None) -> dict:
 
         h = locate(q, page[0]["text"])
         hl = {"start": h.start, "end": h.end, "score": h.score} if h else None
+    pdf_url = d.get("source_url")
+    if not pdf_url and d.get("storage_path"):
+        try:  # the bucket is private: hand out a short-lived signed link
+            signed = db.storage.from_("documents").create_signed_url(d["storage_path"], 3600)
+            pdf_url = signed.get("signedURL") or signed.get("signedUrl")
+        except Exception:
+            pdf_url = None
+    meta = page[0].get("method", "pdfplumber")
     return {
+        "pdf_url": pdf_url,
+        "method": meta,
         "highlight": hl,
         "sha256": sha256,
         "page": n,

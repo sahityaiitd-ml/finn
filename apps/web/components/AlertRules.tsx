@@ -124,7 +124,7 @@ export function AlertRules({ initial }: { initial: Settings }) {
   return (
     <>
       <header className="bg-surface px-5 pb-4 pt-6">
-        <div className="mx-auto flex max-w-[1024px] flex-col gap-[14px]">
+        <div className="mx-auto flex max-w-[640px] flex-col gap-[14px]">
           <div className="flex items-center gap-[10px]">
             <Link href="/profile" aria-label="Back to Profile" className="-m-3 p-3 text-ink-2">
               <ArrowLeft />
@@ -136,7 +136,7 @@ export function AlertRules({ initial }: { initial: Settings }) {
         </div>
       </header>
 
-      <div className="mx-auto flex w-full max-w-[1024px] flex-col gap-3 px-4 pb-28 pt-4">
+      <div className="mx-auto flex w-full max-w-[640px] flex-col gap-3 px-4 pb-28 pt-4">
         <Card>
           <div className="flex items-center gap-2 border-b border-hairline pb-2">
             <h2 className="text-[16px] font-medium text-ink">Portfolio default</h2>

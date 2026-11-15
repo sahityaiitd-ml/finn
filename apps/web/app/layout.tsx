@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { BottomNav } from "@/components/BottomNav";
+import { SourceSheetProvider } from "@/components/SourceSheet";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
@@ -18,10 +19,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        {children}
-        <Suspense fallback={null}>
-          <BottomNav />
-        </Suspense>
+        <SourceSheetProvider>
+          {children}
+          <Suspense fallback={null}>
+            <BottomNav />
+          </Suspense>
+        </SourceSheetProvider>
       </body>
     </html>
   );

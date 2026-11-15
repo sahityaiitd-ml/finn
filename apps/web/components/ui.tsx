@@ -56,18 +56,7 @@ export function Pill({ label, tone = "neutral" }: { label: string; tone?: Tone }
   );
 }
 
-/** Proof link: 13px / 500 / sage-text, 44px hit area, sits under the evidence it supports. */
-export function SourceLink({ href, label }: { href: string; label: string }) {
-  return (
-    <Link
-      href={href}
-      className="inline-flex min-h-[44px] items-center gap-1 text-[13px] font-medium text-sage-text"
-    >
-      {label}
-      <ArrowUpRight />
-    </Link>
-  );
-}
+export { SourceLink } from "./SourceLink";
 
 export function LinkButton({
   href,

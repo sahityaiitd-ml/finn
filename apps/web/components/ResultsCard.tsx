@@ -26,10 +26,12 @@ export function ResultsCard({ v }: { v: ResultsView }) {
   const label = `${fiscalLabel(v.period)} results`;
   const revLine = v.rows.find((r) => r.key === "revenue")?.line ?? null;
   const href = sourceHref(v.source.sha256, v.source.page, revLine);
+  const rev = v.rows.find((r) => r.key === "revenue");
+  const revRead = rev?.value != null ? `Revenue ₹${fmtNum(rev.value)} Cr` : null;
   const basis = v.basis ? v.basis[0].toUpperCase() + v.basis.slice(1) : null;
 
   return (
-    <>
+    <div className="grid gap-3 lg:grid-cols-2 lg:items-start">
       <Card>
         <div className="flex items-center gap-2">
           <div className="min-w-px flex-1">
@@ -63,7 +65,11 @@ export function ResultsCard({ v }: { v: ResultsView }) {
         )}
 
         <div className="flex flex-col">
-          <SourceLink href={href} label={`Source · results filing p.${v.source.page ?? 1}`} />
+          <SourceLink
+            href={href}
+            label={`Source · results filing p.${v.source.page ?? 1}`}
+            read={revRead}
+          />
           {v.status === "ok" && (
             <p className="text-[12px] text-muted">
               {v.exceptional
@@ -86,6 +92,6 @@ export function ResultsCard({ v }: { v: ResultsView }) {
           )}
         </div>
       ))}
-    </>
+    </div>
   );
 }

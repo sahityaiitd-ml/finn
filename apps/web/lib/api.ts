@@ -43,6 +43,8 @@ export type DocPage = {
   period: string;
   text: string;
   highlight?: { start: number; end: number; score: number } | null;
+  pdf_url?: string | null;
+  method?: string;
 };
 
 export type DigestItem = {
