@@ -1,0 +1,26 @@
+/* FINN design tokens — "v3 · Calm ledger", Day mode */
+:root {
+  --canvas: #f4efe8;
+  --surface: #fdfbf8;
+  --sunk: #f1ece4;
+  --track: #ece6dc;
+  --hairline: #e7e1d8;
+  --border: #d3cabd;
+  --ink: #22262a;
+  --ink-2: #5a6170;
+  --muted: #6e737c;
+  --sage: #6b7f6e;
+  --sage-600: #5e7361;
+  --sage-text: #4e6352;
+  --mist: #d9e1d9;
+  --sage-tint: #e4ece4;
+  --sand: #c9bdaf;
+  --terra: #b5473d;
+  --terra-bg: #fbebe6;
+  --amber: #8a5f07;
+  --amber-bg: #fdf4e1;
+
+  --radius-card: 16px;
+  --shadow-card: 0 1px 2px rgba(34, 38, 42, 0.04), 0 4px 16px rgba(34, 38, 42, 0.06);
+  --tap: 44px;
+}

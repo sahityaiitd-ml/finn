@@ -1,0 +1,29 @@
+name: cron
+on:
+  schedule:
+    # fetch-filings every 30 min, Mon-Fri, 09:00-18:30 IST (03:30-13:00 UTC)
+    - cron: "*/30 3-12 * * 1-5"
+    # eod at 16:30 IST = 11:00 UTC
+    - cron: "0 11 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      job: { description: "fetch-filings or eod", required: true, default: "fetch-filings" }
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pick job
+        id: pick
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then J="${{ inputs.job }}";
+          elif [ "${{ github.event.schedule }}" = "0 11 * * 1-5" ]; then J=eod;
+          else J=fetch-filings; fi
+          echo "job=$J" >> "$GITHUB_OUTPUT"
+      - name: Call API (retries while the Space wakes)
+        env:
+          API_URL: ${{ secrets.API_URL }}
+          JOB_SECRET: ${{ secrets.JOB_SECRET }}
+        run: |
+          curl -fsS --retry 5 --retry-delay 20 --retry-all-errors -m 120 \
+            -X POST "$API_URL/jobs/${{ steps.pick.outputs.job }}" \
+            -H "x-job-secret: $JOB_SECRET"
