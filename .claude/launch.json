@@ -1,0 +1,30 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "api",
+      "runtimeExecutable": "/Users/ranky/.local/bin/uv",
+      "runtimeArgs": [
+        "run",
+        "--project",
+        "services/api",
+        "uvicorn",
+        "app.main:app",
+        "--app-dir",
+        "services/api",
+        "--port",
+        "8000"
+      ],
+      "port": 8000
+    },
+    {
+      "name": "web",
+      "runtimeExecutable": "/bin/zsh",
+      "runtimeArgs": [
+        "-c",
+        "export PATH=\"$HOME/.local/node/bin:$PATH\"; cd apps/web && exec pnpm dev -p 3000"
+      ],
+      "port": 3000
+    }
+  ]
+}

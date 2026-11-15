@@ -35,3 +35,21 @@ def test_failed_column_is_unavailable_not_guessed():
 def test_see_pdf_has_no_numbers():
     v = build_view("X", "X Ltd", "2026-09", "abc", row(status="see_pdf", ok=(False,) * 3))
     assert v["rows"] == [] and v["message"] == "See PDF"
+
+
+def test_margin_row_in_bp_and_indian_grouping():
+    from app.results_view import fmt_cr
+
+    v = build_view("X", "X Ltd", "2026-09", "abc", row())
+    m = next(r for r in v["rows"] if r["key"] == "margin")
+    assert m["value"] == 27.3 and m["qoq_bp"] == round((30 / 110 - 25 / 100) * 10000)
+    assert fmt_cr(145463) == "1,45,463" and fmt_cr(73188) == "73,188" and fmt_cr(171.89) == "172"
+    assert fmt_cr(-668) == "-668" and fmt_cr(12.5) == "12.5"
+
+
+def test_other_income_note_cites_a_page():
+    r = row()
+    r["flags"] = ["other_income_gt_20pct_pbt"]
+    r["parsed"]["metrics"]["other_income"] = {"values": [8.0, 5.0, 4.0], "page": 8, "line": "oi"}
+    v = build_view("X", "X Ltd", "2026-09", "abc", r)
+    assert v["notes"][0]["page"] == 8 and "40% of PBT" in v["notes"][0]["text"]
