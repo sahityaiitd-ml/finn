@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fiscalLabel, fmtBp, fmtNum, fmtPct } from "../lib/format";
+import { categoryLabel, fiscalLabel, fmtBp, fmtNum, fmtPct, fmtTimeIST } from "../lib/format";
 
 describe("format", () => {
   it("groups Indian style and uses a real minus", () => {
@@ -20,5 +20,10 @@ describe("format", () => {
     expect(fiscalLabel("2026-06")).toBe("Q1 FY27");
     expect(fiscalLabel("2026-03")).toBe("Q4 FY26");
     expect(fiscalLabel("2025-12")).toBe("Q3 FY26");
+  });
+  it("shows times in IST and readable categories", () => {
+    expect(fmtTimeIST("2026-11-14T11:25:51+00:00")).toBe("16:55");
+    expect(categoryLabel("management_change")).toBe("Management change");
+    expect(categoryLabel(null)).toBe("Filing");
   });
 });

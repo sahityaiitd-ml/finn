@@ -27,3 +27,49 @@ export function fiscalLabel(period: string): string {
   const q = m >= 4 ? Math.floor((m - 4) / 3) + 1 : 4;
   return `Q${q} FY${String(fyEnd).slice(-2)}`;
 }
+
+const IST = "Asia/Kolkata";
+
+export function fmtTimeIST(iso: string): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: IST,
+  }).format(new Date(iso));
+}
+
+export function fmtDayIST(iso: string): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    timeZone: IST,
+  })
+    .format(new Date(iso))
+    .replace(",", ",");
+}
+
+const LABELS: Record<string, string> = {
+  results: "Results",
+  "M&A": "M&A",
+  fund_raise: "Fund raise",
+  management_change: "Management change",
+  litigation: "Litigation",
+  insider_trading: "Insider trading",
+  earnings_call: "Earnings call",
+  investor_meetings: "Investor meetings",
+  credit_rating: "Credit rating",
+  dividend: "Dividend",
+  bonus_split: "Bonus / split",
+  capex: "Capex",
+  press_release: "Press release",
+  postal_ballot: "Postal ballot",
+  agm_egm: "AGM / EGM",
+  pledging: "Pledging",
+  unclassified: "Routine",
+};
+
+export function categoryLabel(c: string | null): string {
+  return c ? (LABELS[c] ?? c) : "Filing";
+}

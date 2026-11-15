@@ -53,6 +53,7 @@ def build_digest(rows: list[dict], names: dict[str, str], now: datetime, window:
     return {
         "window": window if window in WINDOWS else "24h",
         "since": since.isoformat(),
+        "generated_at": now.isoformat(),
         "main": main,
         "routine": routine,
         "counts": {"main": len(main), "routine": len(routine), "to_review": len(open_main)},

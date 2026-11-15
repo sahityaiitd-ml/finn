@@ -44,6 +44,30 @@ export type DocPage = {
   text: string;
 };
 
+export type DigestItem = {
+  id: string;
+  symbol: string;
+  name: string;
+  category: string | null;
+  headline: string;
+  summary: string | null;
+  published_at: string;
+  source_url: string | null;
+  never_collapse: boolean;
+  materiality: number;
+  reviewed: boolean;
+};
+
+export type Digest = {
+  portfolio_id: string;
+  window: string;
+  generated_at: string;
+  main: DigestItem[];
+  routine: DigestItem[];
+  counts: { main: number; routine: number; to_review: number };
+  caught_up: boolean;
+};
+
 async function get<T>(path: string): Promise<T | null> {
   try {
     const r = await fetch(`${API_URL}${path}`, { cache: "no-store" });
@@ -53,6 +77,7 @@ async function get<T>(path: string): Promise<T | null> {
   }
 }
 
+export const getDigest = (window: string) => get<Digest>(`/digest?window=${window}`);
 export const getHealth = () => get<Health>("/health");
 export const getResults = (symbol: string) => get<ResultsView>(`/results/${symbol}/latest`);
 export const getDocPage = (sha: string, n: number) => get<DocPage>(`/docs/${sha}/page/${n}`);
